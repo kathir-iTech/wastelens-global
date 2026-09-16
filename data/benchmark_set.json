@@ -1,0 +1,1 @@
+{"version": "1.0", "items": [], "note": "Hand-labeled benchmark set. 20-28 items target. Sourcing: curated public photos + synthetic renders + real phone photos. Attributes + legal ground truth finalized before evaluate.ts."}
