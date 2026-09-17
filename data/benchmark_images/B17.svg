@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
+  <rect width="640" height="480" fill="#dbeafe"/>
+  <text x="24" y="40" font-family="monospace" font-size="18" fill="#1e293b">SYNTHETIC RENDER — B17 — concrete and brick construction debris</text>
+  <polygon points="320,110 420,240 360,370 280,370 220,240" fill="#60a5fa" stroke="#334155" stroke-width="6"/>
+  
+  <text x="24" y="460" font-family="monospace" font-size="14" fill="#475569">Procedurally generated. Not a photograph. For benchmark provenance see data/benchmark_set.json.</text>
+</svg>

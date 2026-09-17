@@ -1,1 +1,126 @@
-{"jurisdiction": "nyc", "corpus": "Local Law 85 of 2023 (Intro. No. 244-A) + DSNY Title 16 + Admin Code §16-324", "source_urls": ["https://nyc.gov/assets/dsny/downloads/about/adopted-rules/dsny-final-rule-source-separation-residential-organics-102123.pdf", "https://codelibrary.amlegal.com/codes/newyorkcity/latest/NYCadmin/0-0-0-221561"], "streams": ["food", "yard", "paper-card", "glass", "metal", "plastic", "residual"], "rows": [], "note": "Enforcement: fines began Apr 1 2025, paused Apr 18 2025, resumed 2026. Penalty structure sourced from Admin Code §16-324 ($100/$200/$400 commercial). Fine rows must verify against §16-324 directly."}
+{
+  "jurisdiction": "nyc",
+  "corpus": "Mandatory recycling under the City Recycling Law, Local Law 19 of 1989 (Admin Code §§16-301 et seq.), implemented through 16 RCNY Chapter 1 (Collection); organics source separation under DSNY's Source Separation of Residential Organics Rules (2023) and Admin Code §16-308.1 / Local Law 85 of 2023, mandatory citywide from 1 Apr 2025.",
+  "source_urls": [
+    "https://codelibrary.amlegal.com/codes/newyorkcity/latest/NYCrules/0-0-0-30861",
+    "https://codelibrary.amlegal.com/codes/newyorkcity/latest/NYCadmin/0-0-0-221561",
+    "https://nyc.gov/assets/dsny/downloads/about/adopted-rules/dsny-final-rule-source-separation-residential-organics-102123.pdf",
+    "https://www.nyc.gov/assets/dsny/downloads/resources/reports/solid-waste-management/2026-swmp/draft-swmp-2026-attachments-revised.pdf",
+    "https://www.nyc.gov/site/dsny/collection/residents/recycling.page"
+  ],
+  "streams": ["food", "paper-card", "metal-plastic-glass", "residual"],
+  "rows": [
+    {
+      "jurisdiction": "nyc",
+      "clause_id": "NYC2024-food-hh",
+      "stream": "food",
+      "source_url": "https://nyc.gov/assets/dsny/downloads/about/adopted-rules/dsny-final-rule-source-separation-residential-organics-102123.pdf",
+      "effective_date": "2025-04-01",
+      "date_precision": "exact",
+      "scope": "households",
+      "fine_bracket": null,
+      "exemptions": null,
+      "verification_status": "verified",
+      "rule_text": "Households must segregate food waste (including food scraps, fruits, vegetables, meat, dairy, grains) for organic collection and processing at DSNY-certified facilities; mandatory citywide from 1 Apr 2025.",
+      "citation_precision": "general"
+    },
+    {
+      "jurisdiction": "nyc",
+      "clause_id": "NYC2024-food-com",
+      "stream": "food",
+      "source_url": "https://nyc.gov/assets/dsny/downloads/about/adopted-rules/dsny-final-rule-source-separation-residential-organics-102123.pdf",
+      "effective_date": "2025-04-01",
+      "date_precision": "exact",
+      "scope": "commercial",
+      "fine_bracket": null,
+      "exemptions": null,
+      "verification_status": "verified",
+      "rule_text": "Commercial generators must segregate food waste and ensure its separation from recyclables and trash, with penalties under Admin Code §16-308.1 for non-compliance.",
+      "citation_precision": "general"
+    },
+    {
+      "jurisdiction": "nyc",
+      "clause_id": "NYC2024-paper-hh",
+      "stream": "paper-card",
+      "source_url": "https://codelibrary.amlegal.com/codes/newyorkcity/latest/NYCrules/0-0-0-30861",
+      "effective_date": "1989",
+      "date_precision": "year",
+      "scope": "households",
+      "fine_bracket": null,
+      "exemptions": null,
+      "verification_status": "verified",
+      "rule_text": "Households must separate mixed paper and cardboard from garbage for recycling collection under the City Recycling Law (Local Law 19 of 1989, Admin Code §§16-301 et seq.) and 16 RCNY Chapter 1.",
+      "citation_precision": "general"
+    },
+    {
+      "jurisdiction": "nyc",
+      "clause_id": "NYC2024-paper-com",
+      "stream": "paper-card",
+      "source_url": "https://codelibrary.amlegal.com/codes/newyorkcity/latest/NYCrules/0-0-0-30861",
+      "effective_date": "1989",
+      "date_precision": "year",
+      "scope": "commercial",
+      "fine_bracket": null,
+      "exemptions": null,
+      "verification_status": "verified",
+      "rule_text": "Commercial generators must source-separate paper and cardboard for recycling under the City Recycling Law (Local Law 19 of 1989, Admin Code §§16-301 et seq.) and 16 RCNY Chapter 1, with collection arranged through licensed carters.",
+      "citation_precision": "general"
+    },
+    {
+      "jurisdiction": "nyc",
+      "clause_id": "NYC2024-recyclables-hh",
+      "stream": "metal-plastic-glass",
+      "source_url": "https://codelibrary.amlegal.com/codes/newyorkcity/latest/NYCrules/0-0-0-30861",
+      "effective_date": "1989",
+      "date_precision": "year",
+      "scope": "households",
+      "fine_bracket": null,
+      "exemptions": null,
+      "verification_status": "verified",
+      "rule_text": "Households must separate metal, glass, and rigid plastic containers plus cartons for recycling collection under the City Recycling Law (Local Law 19 of 1989, Admin Code §§16-301 et seq.) and 16 RCNY Chapter 1.",
+      "citation_precision": "general"
+    },
+    {
+      "jurisdiction": "nyc",
+      "clause_id": "NYC2024-recyclables-com",
+      "stream": "metal-plastic-glass",
+      "source_url": "https://codelibrary.amlegal.com/codes/newyorkcity/latest/NYCrules/0-0-0-30861",
+      "effective_date": "1989",
+      "date_precision": "year",
+      "scope": "commercial",
+      "fine_bracket": null,
+      "exemptions": null,
+      "verification_status": "verified",
+      "rule_text": "Commercial generators must source-separate metal, glass, and rigid plastics for recycling under the City Recycling Law (Local Law 19 of 1989, Admin Code §§16-301 et seq.) and 16 RCNY Chapter 1, with collection arranged through licensed carters.",
+      "citation_precision": "general"
+    },
+    {
+      "jurisdiction": "nyc",
+      "clause_id": "NYC2024-resid-hh",
+      "stream": "residual",
+      "source_url": "https://codelibrary.amlegal.com/codes/newyorkcity/latest/NYCrules/0-0-0-30861",
+      "effective_date": "1989",
+      "date_precision": "year",
+      "scope": "households",
+      "fine_bracket": null,
+      "exemptions": null,
+      "verification_status": "verified",
+      "rule_text": "Households set out residual/non-recyclable waste for landfill or energy recovery under 16 RCNY Chapter 1, following DSNY collection schedules and receptacle rules (Admin Code §16-120(a)).",
+      "citation_precision": "general"
+    },
+    {
+      "jurisdiction": "nyc",
+      "clause_id": "NYC2024-resid-com",
+      "stream": "residual",
+      "source_url": "https://codelibrary.amlegal.com/codes/newyorkcity/latest/NYCrules/0-0-0-30861",
+      "effective_date": "1989",
+      "date_precision": "year",
+      "scope": "commercial",
+      "fine_bracket": null,
+      "exemptions": null,
+      "verification_status": "verified",
+      "rule_text": "Commercial generators must manage non-recyclable residual waste through DSNY-approved carters, with compliance tracked under the City Recycling Law (Local Law 19 of 1989, Admin Code §§16-301 et seq.) and 16 RCNY Chapter 1.",
+      "citation_precision": "general"
+    }
+  ]
+}

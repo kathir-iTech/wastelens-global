@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
+  <rect width="640" height="480" fill="#fce7f3"/>
+  <text x="24" y="40" font-family="monospace" font-size="18" fill="#1e293b">SYNTHETIC RENDER — B26 — mouldy bread loaf</text>
+  <rect x="270" y="130" width="100" height="220" rx="8" fill="#f472b6" stroke="#334155" stroke-width="6"/><ellipse cx="320" cy="130" rx="50" ry="18" fill="#f1f5f9" stroke="#334155" stroke-width="6"/>
+  
+  <text x="24" y="460" font-family="monospace" font-size="14" fill="#475569">Procedurally generated. Not a photograph. For benchmark provenance see data/benchmark_set.json.</text>
+</svg>

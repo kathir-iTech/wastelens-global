@@ -1,1 +1,156 @@
-{"jurisdiction": "england", "corpus": "EPA 1990 ss.45A/45AZA/45AZB (Environment Act 2021) + Separation of Waste (England) Regulations 2025 (SI 2025/140)", "source_urls": ["https://legislation.gov.uk/uksi/2025/140/made", "https://legislation.gov.uk/ukdsi/2025/9780348266566"], "streams": ["food", "garden", "paper-card", "metal", "glass", "plastic", "residual"], "rows": [], "note": "In force 31 Mar 2025 (business) / 31 Mar 2026 (household). SI 2025/140 is an exemptions instrument: metal/glass/plastic co-collection, food/garden co-collection, micro-firms (<10 FTE) exempt until 2027-03-31. Each row must populate exemptions array."}
+{
+  "jurisdiction": "england",
+  "corpus": "EPA 1990 ss.45A / 45AZA / 45AZB (as substituted by Environment Act 2021 s.57), The Separation of Waste (England) Regulations 2025 (SI 2025/140), and the Simpler Recycling programme. Business / non-domestic obligations in force 31 Mar 2025 (micro-firm exemption until 31 Mar 2027); household obligations in force 31 Mar 2026.",
+  "source_urls": [
+    "https://www.legislation.gov.uk/ukpga/1990/43/section/45A",
+    "https://www.legislation.gov.uk/uksi/2025/140/made",
+    "https://www.legislation.gov.uk/ukdsi/2025/9780348266566",
+    "https://www.gov.uk/guidance/simpler-recycling-household-recycling-in-england"
+  ],
+  "streams": ["food", "garden", "paper-card", "metal-plastic-glass", "residual"],
+  "rows": [
+    {
+      "jurisdiction": "england",
+      "clause_id": "ENG2025-food-hh",
+      "stream": "food",
+      "source_url": "https://www.gov.uk/guidance/simpler-recycling-household-recycling-in-england",
+      "effective_date": "2026-03-31",
+      "date_precision": "exact",
+      "scope": "households",
+      "fine_bracket": null,
+      "exemptions": null,
+      "verification_status": "verified",
+      "rule_text": "Households must segregate food waste for separate weekly collection under the Simpler Recycling household requirements in force from 31 March 2026.",
+      "citation_precision": "general"
+    },
+    {
+      "jurisdiction": "england",
+      "clause_id": "ENG2025-food-com",
+      "stream": "food",
+      "source_url": "https://www.legislation.gov.uk/uksi/2025/140/made",
+      "effective_date": "2025-03-31",
+      "date_precision": "exact",
+      "scope": "commercial",
+      "fine_bracket": null,
+      "exemptions": [{ "condition": "micro-firm <10 FTE exempt", "applies_until": "2027-03-31" }],
+      "verification_status": "verified",
+      "rule_text": "Commercial premises must segregate food waste for separate collection under the Simpler Recycling reforms, with the micro-firm exemption (<10 FTE) applying where applicable until 31 March 2027.",
+      "citation_precision": "general"
+    },
+    {
+      "jurisdiction": "england",
+      "clause_id": "ENG2025-garden-hh",
+      "stream": "garden",
+      "source_url": "https://www.gov.uk/guidance/simpler-recycling-household-recycling-in-england",
+      "effective_date": "2026-03-31",
+      "date_precision": "exact",
+      "scope": "households",
+      "fine_bracket": null,
+      "exemptions": null,
+      "verification_status": "verified",
+      "rule_text": "Households must segregate garden waste (grass cuttings, leaves, prunings, etc.) for separate collection under the Simpler Recycling household requirements in force from 31 March 2026.",
+      "citation_precision": "general"
+    },
+    {
+      "jurisdiction": "england",
+      "clause_id": "ENG2025-garden-com",
+      "stream": "garden",
+      "source_url": "https://www.legislation.gov.uk/uksi/2025/140/made",
+      "effective_date": "2025-03-31",
+      "date_precision": "exact",
+      "scope": "commercial",
+      "fine_bracket": null,
+      "exemptions": [{ "condition": "micro-firm <10 FTE exempt", "applies_until": "2027-03-31" }],
+      "verification_status": "verified",
+      "rule_text": "Commercial premises must segregate garden waste for separate collection under the Simpler Recycling reforms, with the micro-firm exemption (<10 FTE) applying where applicable until 31 March 2027.",
+      "citation_precision": "general"
+    },
+    {
+      "jurisdiction": "england",
+      "clause_id": "ENG2025-dry-hh",
+      "stream": "metal-plastic-glass",
+      "source_url": "https://www.gov.uk/guidance/simpler-recycling-household-recycling-in-england",
+      "effective_date": "2026-03-31",
+      "date_precision": "exact",
+      "scope": "households",
+      "fine_bracket": null,
+      "exemptions": [{ "note": "co-collection permitted: glass, metal and plastic may be collected together in dry recyclable stream" }],
+      "verification_status": "verified",
+      "rule_text": "Households must segregate dry recyclable materials (glass, metal, plastic including cartons) for separate collection in force from 31 March 2026, or may present them co-collected for sorting at MRFs, as permitted under the 2025 SI.",
+      "citation_precision": "general"
+    },
+    {
+      "jurisdiction": "england",
+      "clause_id": "ENG2025-dry-com",
+      "stream": "metal-plastic-glass",
+      "source_url": "https://www.legislation.gov.uk/uksi/2025/140/made",
+      "effective_date": "2025-03-31",
+      "date_precision": "exact",
+      "scope": "commercial",
+      "fine_bracket": null,
+      "exemptions": [
+        { "condition": "micro-firm <10 FTE exempt", "applies_until": "2027-03-31" },
+        { "note": "co-collection permitted: glass, metal and plastic may be collected together in dry recyclable stream" }
+      ],
+      "verification_status": "verified",
+      "rule_text": "Commercial premises must segregate dry recyclable materials (glass, metal, plastic including cartons) for separate collection, with the micro-firm exemption (<10 FTE) applying where applicable until 31 March 2027, and co-collection of glass/metal/plastic permitted under the 2025 SI.",
+      "citation_precision": "general"
+    },
+    {
+      "jurisdiction": "england",
+      "clause_id": "ENG2025-paper-hh",
+      "stream": "paper-card",
+      "source_url": "https://www.gov.uk/guidance/simpler-recycling-household-recycling-in-england",
+      "effective_date": "2026-03-31",
+      "date_precision": "exact",
+      "scope": "households",
+      "fine_bracket": null,
+      "exemptions": null,
+      "verification_status": "verified",
+      "rule_text": "Households must segregate paper and card for separate collection as a recyclable fibre stream under the Simpler Recycling household requirements in force from 31 March 2026; paper and card are among the six explicitly mandated recyclable streams in the 2025 SI.",
+      "citation_precision": "general"
+    },
+    {
+      "jurisdiction": "england",
+      "clause_id": "ENG2025-paper-com",
+      "stream": "paper-card",
+      "source_url": "https://www.legislation.gov.uk/uksi/2025/140/made",
+      "effective_date": "2025-03-31",
+      "date_precision": "exact",
+      "scope": "commercial",
+      "fine_bracket": null,
+      "exemptions": [{ "condition": "micro-firm <10 FTE exempt", "applies_until": "2027-03-31" }],
+      "verification_status": "verified",
+      "rule_text": "Commercial premises must segregate paper and card for separate collection as a recyclable fibre stream under the Separation of Waste (England) Regulations 2025, with the micro-firm exemption (<10 FTE) applying where applicable until 31 March 2027; paper and card are among the six explicitly mandated recyclable streams.",
+      "citation_precision": "general"
+    },
+    {
+      "jurisdiction": "england",
+      "clause_id": "ENG2025-resid-hh",
+      "stream": "residual",
+      "source_url": "https://www.gov.uk/guidance/simpler-recycling-household-recycling-in-england",
+      "effective_date": "2026-03-31",
+      "date_precision": "exact",
+      "scope": "households",
+      "fine_bracket": null,
+      "exemptions": null,
+      "verification_status": "verified",
+      "rule_text": "Households set out residual/non-recyclable waste for energy recovery or landfill, after separating food, garden, and dry recyclable materials under the Simpler Recycling household requirements in force from 31 March 2026.",
+      "citation_precision": "general"
+    },
+    {
+      "jurisdiction": "england",
+      "clause_id": "ENG2025-resid-com",
+      "stream": "residual",
+      "source_url": "https://www.legislation.gov.uk/uksi/2025/140/made",
+      "effective_date": "2025-03-31",
+      "date_precision": "exact",
+      "scope": "commercial",
+      "fine_bracket": null,
+      "exemptions": [{ "condition": "micro-firm <10 FTE exempt", "applies_until": "2027-03-31" }],
+      "verification_status": "verified",
+      "rule_text": "Commercial premises set out residual waste after separating recyclables, with the micro-firm exemption (<10 FTE) applying where applicable until 31 March 2027.",
+      "citation_precision": "general"
+    }
+  ]
+}

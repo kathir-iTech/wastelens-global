@@ -1,1 +1,122 @@
-{"jurisdiction": "india", "corpus": "SWM Rules 2026 (S.O. 388(E), notified 27 Jan 2026, in force 1 Apr 2026, supersedes SWM Rules 2016)", "source_urls": ["https://www.pib.gov.in/PressReleasePage.aspx?PRID=2219676", "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2246814"], "streams": ["wet", "dry", "sanitary", "special-care"], "rows": [], "note": "Four-stream segregation. Schema change from 2016 two-stream model. Each row: {clause_id, stream, source_url, effective_date, scope, fine_bracket, exemptions, verification_status, valid_from, valid_until}"}
+{
+  "jurisdiction": "india",
+  "corpus": "Solid Waste Management Rules, 2026 (S.O. 388(E)), gazetted 28 Jan 2026 (Gazette CG-DL-E-28012026-269620); rules in force 1 Apr 2026. Household and commercial source segregation into wet / dry / sanitary / special-care streams.",
+  "source_urls": [
+    "https://gazettetracker.com/g/CG-DL-E-28012026-269620"
+  ],
+  "streams": ["wet", "dry", "sanitary", "special-care"],
+  "rows": [
+    {
+      "jurisdiction": "india",
+      "clause_id": "SWM2026-wet-hh",
+      "stream": "wet",
+      "source_url": "https://gazettetracker.com/g/CG-DL-E-28012026-269620",
+      "effective_date": "2026-04-01",
+      "date_precision": "exact",
+      "scope": "households",
+      "fine_bracket": null,
+      "exemptions": null,
+      "verification_status": "verified",
+      "rule_text": "Households must segregate wet waste (kitchen waste, vegetables, fruit peels, meat, flowers) for composting or bio-methanation at the nearest facility.",
+      "citation_precision": "general"
+    },
+    {
+      "jurisdiction": "india",
+      "clause_id": "SWM2026-wet-com",
+      "stream": "wet",
+      "source_url": "https://gazettetracker.com/g/CG-DL-E-28012026-269620",
+      "effective_date": "2026-04-01",
+      "date_precision": "exact",
+      "scope": "commercial",
+      "fine_bracket": null,
+      "exemptions": null,
+      "verification_status": "verified",
+      "rule_text": "Commercial generators must segregate wet waste and ensure its composting or bio-methanation, or process on-site as far as possible under Extended Bulk Waste Generator Responsibility.",
+      "citation_precision": "general"
+    },
+    {
+      "jurisdiction": "india",
+      "clause_id": "SWM2026-dry-hh",
+      "stream": "dry",
+      "source_url": "https://gazettetracker.com/g/CG-DL-E-28012026-269620",
+      "effective_date": "2026-04-01",
+      "date_precision": "exact",
+      "scope": "households",
+      "fine_bracket": null,
+      "exemptions": null,
+      "verification_status": "verified",
+      "rule_text": "Households must segregate dry waste (plastic, paper, metal, glass, wood, rubber) for transport to Material Recovery Facilities for sorting and recycling.",
+      "citation_precision": "general"
+    },
+    {
+      "jurisdiction": "india",
+      "clause_id": "SWM2026-dry-com",
+      "stream": "dry",
+      "source_url": "https://gazettetracker.com/g/CG-DL-E-28012026-269620",
+      "effective_date": "2026-04-01",
+      "date_precision": "exact",
+      "scope": "commercial",
+      "fine_bracket": null,
+      "exemptions": null,
+      "verification_status": "verified",
+      "rule_text": "Commercial generators must segregate dry waste and ensure its transport to MRFs, with Bulk Waste Generators (floor area 20,000 m² or more, water consumption 40,000 L/day or more, or solid waste generation 100 kg/day or more) required to process wet waste on-site or obtain an EBWGR certificate.",
+      "citation_precision": "general"
+    },
+    {
+      "jurisdiction": "india",
+      "clause_id": "SWM2026-san-hh",
+      "stream": "sanitary",
+      "source_url": "https://gazettetracker.com/g/CG-DL-E-28012026-269620",
+      "effective_date": "2026-04-01",
+      "date_precision": "exact",
+      "scope": "households",
+      "fine_bracket": null,
+      "exemptions": null,
+      "verification_status": "verified",
+      "rule_text": "Households must securely wrap and store sanitary waste (used diapers, sanitary towels, tampons, condoms) separately for designated collection.",
+      "citation_precision": "general"
+    },
+    {
+      "jurisdiction": "india",
+      "clause_id": "SWM2026-san-com",
+      "stream": "sanitary",
+      "source_url": "https://gazettetracker.com/g/CG-DL-E-28012026-269620",
+      "effective_date": "2026-04-01",
+      "date_precision": "exact",
+      "scope": "commercial",
+      "fine_bracket": null,
+      "exemptions": null,
+      "verification_status": "verified",
+      "rule_text": "Commercial generators must securely wrap and store sanitary waste separately, with Bulk Waste Generators (floor area 20,000 m² or more, water consumption 40,000 L/day or more, or solid waste generation 100 kg/day or more) required to obtain an EBWGR certificate where on-site processing is not feasible.",
+      "citation_precision": "general"
+    },
+    {
+      "jurisdiction": "india",
+      "clause_id": "SWM2026-spc-hh",
+      "stream": "special-care",
+      "source_url": "https://gazettetracker.com/g/CG-DL-E-28012026-269620",
+      "effective_date": "2026-04-01",
+      "date_precision": "exact",
+      "scope": "households",
+      "fine_bracket": null,
+      "exemptions": null,
+      "verification_status": "verified",
+      "rule_text": "Households must deposit special-care waste (paint cans, bulbs, mercury thermometers, medicines) through authorised agencies or at designated collection centres.",
+      "citation_precision": "general"
+    },
+    {
+      "jurisdiction": "india",
+      "clause_id": "SWM2026-spc-com",
+      "stream": "special-care",
+      "source_url": "https://gazettetracker.com/g/CG-DL-E-28012026-269620",
+      "effective_date": "2026-04-01",
+      "date_precision": "exact",
+      "scope": "commercial",
+      "fine_bracket": null,
+      "exemptions": null,
+      "verification_status": "verified",
+      "rule_text": "Commercial generators must ensure special-care waste (paint cans, bulbs, medicines) is collected by authorised agencies or deposited at designated centres; Bulk Waste Generators must obtain an EBWGR certificate for such streams where decentralised processing is not feasible.",
+      "citation_precision": "general"
+    }
+  ]
+}
