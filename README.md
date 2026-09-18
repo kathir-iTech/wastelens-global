@@ -18,10 +18,13 @@ A statutory waste-compliance decision system built for NextStep Hacks 2026 (Eart
 
 Corpus files: `data/jurisdictions/{india,nyc,england}/rules.json`. **All three share one schema** — a single `{ jurisdiction, corpus, source_urls, streams, rows }` wrapper object — and `lib/corpus.ts` uses one parser for all three (a regression test rejects any flat-array shape). Dates and sources are regression-tested: England household rows are 2026-03-31, NYC dry-recyclable/collection rows cite 16 RCNY Ch.1 / Local Law 19, never the organics PDF.
 
-## Stack
+## Built With
 
-- Next.js 15 + React 19 + TypeScript + Tailwind CSS v4, deployed on Vercel
-- Vision: the **current Flash-tier vision model resolved at build time** from `https://ai.google.dev/gemini-api/docs/models` by `scripts/resolve-gemini-model.ts` — today **Gemini 3.8 Flash**. No model string is hardcoded anywhere. Local YOLO12n / RF-DETR was explicitly considered and dropped: no weights or inference backend exist, and with 3.8 Flash confirmed GA (2 Sep 2026, image-capable, free tier) a second path added no value. The `lib/perception.ts` seam still accepts `./models/*.onnx` later without touching the matrix.
+All real, in use, in this repo — nothing aspirational:
+
+- **Next.js 15** + **React 19** + **TypeScript** + **Tailwind CSS v4**, deployed on **Vercel**
+- **Gemini 3.8 Flash** (vision): the current Flash-tier vision model resolved at build time from `https://ai.google.dev/gemini-api/docs/models` by `scripts/resolve-gemini-model.ts` — today **Gemini 3.8 Flash**. No model string is hardcoded anywhere. Local YOLO12n / RF-DETR was explicitly considered and dropped: no weights or inference backend exist, and with 3.8 Flash confirmed GA (2 Sep 2026, image-capable, free tier) a second path added no value. The `lib/perception.ts` seam still accepts `./models/*.onnx` later without touching the matrix.
+- **No Supabase, no pgvector.** Retrieval is the deterministic local matcher described below — embeddings were deliberately not added.
 
 ## Design decisions (said straight)
 
