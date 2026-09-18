@@ -14,7 +14,7 @@ A statutory waste-compliance decision system built for NextStep Hacks 2026 (Eart
 | --- | --- | --- |
 | India | SWM Rules 2026 (S.O. 388(E), effective 1 Apr 2026) | 8 |
 | New York City | Local Law 19 of 1989 (Admin Code §§16-301 et seq., 16 RCNY Ch.1) + DSNY Source Separation Organics Rules (2023), Admin Code §16-308.1, LL 85 of 2023 | 8 |
-| England | Simpler Recycling / EPA 1990 ss.45A/45AZA/45AZB + SI 2025/140 (business 31 Mar 2025, household 31 Mar 2026) | 8 |
+| England | Simpler Recycling / EPA 1990 ss.45A/45AZA/45AZB + SI 2025/140 (business 31 Mar 2025, household 31 Mar 2026) | 10 |
 
 Corpus files: `data/jurisdictions/{india,nyc,england}/rules.json`. **All three share one schema** — a single `{ jurisdiction, corpus, source_urls, streams, rows }` wrapper object — and `lib/corpus.ts` uses one parser for all three (a regression test rejects any flat-array shape). Dates and sources are regression-tested: England household rows are 2026-03-31, NYC dry-recyclable/collection rows cite 16 RCNY Ch.1 / Local Law 19, never the organics PDF.
 
@@ -23,11 +23,17 @@ Corpus files: `data/jurisdictions/{india,nyc,england}/rules.json`. **All three s
 - Next.js 15 + React 19 + TypeScript + Tailwind CSS v4, deployed on Vercel
 - Vision: the **current Flash-tier vision model resolved at build time** from `https://ai.google.dev/gemini-api/docs/models` by `scripts/resolve-gemini-model.ts` — today **Gemini 3.8 Flash**. No model string is hardcoded anywhere. Local YOLO12n / RF-DETR was explicitly considered and dropped: no weights or inference backend exist, and with 3.8 Flash confirmed GA (2 Sep 2026, image-capable, free tier) a second path added no value. The `lib/perception.ts` seam still accepts `./models/*.onnx` later without touching the matrix.
 
+## Design decisions (said straight)
+
+- **Retrieval is deterministic weighted matching, not embeddings.** `lib/retriever.ts` scores local corpus rows exactly (stream +40, scope +25, term overlap +2/+10) and `retrieveRemote()` (pgvector) is deliberately not wired in this build. This is a feature, not a gap: for a legal-compliance tool, auditable and exact beats probabilistic, and pgvector would add approximate-match risk to precisely the one layer that cannot afford to guess. The p95 numbers and Mode B describe this local deterministic path only.
+- **No generator-class-aware logic yet.** `AdjudicationInput.generator_class` / `rule_version` are required and carried through onto verdicts, but `adjudicate()` does not branch on them (e.g. the England micro-firm exemption displays as attached info on a matched row; nothing yet checks whether *this* generator qualifies). Informational, not enforced — by design for this build.
+- `matrix.ts` itself never guesses: unknown streams and low-confidence inputs resolve to Tier 2 clarify or Tier 3 "no fine asserted"; Tier 3's `fine_bracket: null` is hardcoded in `tier3Verdict()`.
+
 ## Quick start
 
 ```bash
 npm install
-npm run test          # 486 behavior tests (determinism, tier logic, corpus schema + dates, no-re-perceive on toggle, Mode B network-off, benchmark integrity)
+npm run test          # 488 behavior tests (determinism, tier logic, corpus schema + dates, no-re-perceive on toggle, Mode B network-off, benchmark integrity)
 npm run verify-rules  # corpus + benchmark-label integrity
 npm run evaluate      # LCL / JDR / tier coverage / p95 — the numbers below
 npm run dev
