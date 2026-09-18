@@ -75,7 +75,7 @@ export function SampleGallery() {
                   href={c.verdict.source_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-auto inline-block truncate text-[11px] text-sky-700 underline decoration-sky-300 underline-offset-2"
+                  className="mt-auto block max-w-full truncate text-[11px] text-sky-700 underline decoration-sky-300 underline-offset-2"
                 >
                   {c.verdict.source_url}
                 </a>

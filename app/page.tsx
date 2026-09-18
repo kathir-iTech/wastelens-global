@@ -68,6 +68,7 @@ export default function Home() {
   const [uploadDataUrl, setUploadDataUrl] = useState<string | null>(null);
   const [perceiving, setPerceiving] = useState(false);
   const [perceptionNote, setPerceptionNote] = useState<string | null>(null);
+  const [scanStage, setScanStage] = useState<"idle" | "identifying" | "checking">("idle");
 
   const sample = SAMPLES.find((s) => s.id === sampleId) ?? SAMPLES[0];
   const shownImage = uploadDataUrl ?? sample.publicPath;
@@ -89,6 +90,8 @@ export default function Home() {
   async function runPerception() {
     setPerceiving(true);
     setPerceptionNote(null);
+    setScanStage("identifying");
+    const stageTimer = setTimeout(() => setScanStage("checking"), 800);
     try {
       const ref = uploadDataUrl ?? sample.dataPath;
       await ctl.perceiveImage(ref);
@@ -101,6 +104,8 @@ export default function Home() {
         );
       }
     } finally {
+      clearTimeout(stageTimer);
+      setScanStage("idle");
       setPerceiving(false);
     }
   }
@@ -167,7 +172,7 @@ export default function Home() {
           </p>
         </header>
 
-        <div className="mb-4 inline-flex rounded-lg border border-slate-200 bg-white p-1">
+        <div className="mb-4 flex flex-wrap gap-1 rounded-lg border border-slate-200 bg-white p-1">
           {(["A", "B"] as const).map((m) => (
             <button
               key={m}
@@ -231,8 +236,16 @@ export default function Home() {
                   disabled={perceiving}
                   className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700 disabled:opacity-50"
                 >
-                  {perceiving ? "Perceiving…" : "Run perception"}
+                  {perceiving ? "Scanning…" : "Run perception"}
                 </button>
+
+                {scanStage !== "idle" && (
+                  <p className="animate-pulse text-xs font-medium text-slate-600" role="status">
+                    {scanStage === "identifying"
+                      ? "Identifying item…"
+                      : `Checking ${JURISDICTION_LABELS[activeJuris]} law…`}
+                  </p>
+                )}
 
                 <div className="text-xs text-slate-500">
                   Perception invocations this session:{" "}

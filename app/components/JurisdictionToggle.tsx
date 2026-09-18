@@ -10,7 +10,7 @@ export function JurisdictionToggle({
   onChange: (j: Jurisdiction) => void;
 }) {
   return (
-    <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-1">
+    <div className="flex max-w-full flex-wrap rounded-lg border border-slate-200 bg-slate-50 p-1">
       {JURISDICTIONS.map((j) => (
         <button
           key={j}
