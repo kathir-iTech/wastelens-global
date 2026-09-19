@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { perceive } from "@/lib/perception";
 
+export const maxDuration = 30;
+
 function resolveImageData(
   body: { image_data?: string }
 ): { ref: string; mime: string } | { ref: string; error: string } {

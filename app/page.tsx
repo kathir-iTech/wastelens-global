@@ -80,6 +80,12 @@ export default function Home() {
   const [perceiving, setPerceiving] = useState(false);
   const [perceptionNote, setPerceptionNote] = useState<string | null>(null);
   const [scanStage, setScanStage] = useState<"idle" | "identifying" | "checking">("idle");
+  const [scanElapsed, setScanElapsed] = useState(0);
+  useEffect(() => {
+    if (scanStage === "idle") return;
+    const t = setInterval(() => setScanElapsed((s) => s + 1), 1000);
+    return () => clearInterval(t);
+  }, [scanStage]);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const [perceptionCount, setPerceptionCount] = useState(0);
@@ -112,6 +118,7 @@ export default function Home() {
     setPerceiving(true);
     setPerceptionNote(null);
     setScanStage("identifying");
+    setScanElapsed(0);
     const stageTimer = setTimeout(() => setScanStage("checking"), 800);
     try {
       const ref = uploadDataUrl ?? (await toDataUri(sample.publicPath));
@@ -237,12 +244,7 @@ export default function Home() {
             WasteLens <span className="text-tier1">Global</span>
           </h1>
           <p className="mt-3 text-xl text-muted md:text-2xl">The law decides.</p>
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted">
-            Photograph waste, get the statute. Verdicts are deterministic matrix lookups
-            against verified corpus rows — India SWM 2026, NYC Local Law 19 / §16-324,
-            England SI 2025/140. Perception runs once per image and is cached across
-            jurisdiction switches.
-          </p>
+          <p className="mt-4 text-lg text-muted">Photograph waste, get the statute.</p>
         </header>
 
         <div className="mb-4 inline-flex flex-wrap gap-1 rounded-2xl border border-white/10 bg-white/[0.04] p-1 shadow-[0_4px_18px_rgba(0,0,0,0.25)] backdrop-blur-xl">
@@ -324,7 +326,9 @@ export default function Home() {
                 <p className="animate-pulse text-xs font-medium text-ink" role="status">
                   {scanStage === "identifying"
                     ? "Identifying item…"
-                    : `Checking ${JURISDICTION_LABELS[activeJuris]} law…`}
+                    : scanElapsed < 2
+                      ? `Consulting the law — ${JURISDICTION_LABELS[activeJuris]}…`
+                      : `Gemini's busy, still trying… (${scanElapsed}s)`}
                 </p>
               )}
 
@@ -370,6 +374,18 @@ export default function Home() {
                   </>
                 )}
               </div>
+
+              <details className="mt-1 text-sm text-muted">
+                <summary className="cursor-pointer text-accent underline decoration-accent/40 underline-offset-2 hover:decoration-accent">
+                  Why trust this? — method & sources
+                </summary>
+                <p className="mt-2 leading-relaxed">
+                  Verdicts are deterministic matrix lookups against verified corpus rows
+                  (India SWM 2026, NYC Local Law 19 / §16-324, England SI 2025/140) — not
+                  generated text. Perception runs once per image and is cached across
+                  jurisdiction switches. Every number shown here is real.
+                </p>
+              </details>
             </div>
           </section>
         )}

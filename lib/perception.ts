@@ -112,24 +112,47 @@ async function encodeImageRef(imageRef: string): Promise<{ data: string; mime: s
   return null;
 }
 
+export const GEMINI_ATTEMPTS = 2;
+export const GEMINI_RETRY_BACKOFF_MS = 1500;
+export const GEMINI_REQUEST_TIMEOUT_MS = 12000;
+
 async function geminiFetch(
   url: string,
   init: RequestInit,
-  attempts = 4
+  attempts: number = GEMINI_ATTEMPTS
 ): Promise<Response> {
-  let last: Response | null = null;
-  for (let attempt = 1; ; attempt++) {
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    const controller = new AbortController();
+    const timeout = setTimeout(
+      () => controller.abort(new DOMException("Gemini request timed out", "TimeoutError")),
+      GEMINI_REQUEST_TIMEOUT_MS
+    );
+    const signal =
+      init.signal && typeof AbortSignal.any === "function"
+        ? AbortSignal.any([init.signal, controller.signal])
+        : controller.signal;
     try {
-      const res = await fetch(url, init);
-      last = res;
-      if (attempt >= attempts || (res.status !== 429 && res.status < 500)) return res;
+      const res = await fetch(url, { ...init, signal });
+      if (res.status !== 429 && res.status < 500) return res;
+      if (attempt === attempts) return res;
     } catch (err) {
-      if (attempt >= attempts) {
-        return new Response(`network error: ${String(err).slice(0, 200)}`, { status: 503 });
+      if (attempt === attempts) {
+        const timedOut = err instanceof DOMException && err.name === "TimeoutError";
+        return new Response(
+          timedOut
+            ? `Gemini request timed out after ${GEMINI_REQUEST_TIMEOUT_MS / 1000}s`
+            : `network error: ${String(err).slice(0, 200)}`,
+          { status: timedOut ? 504 : 503 }
+        );
       }
+    } finally {
+      clearTimeout(timeout);
     }
-    await new Promise((r) => setTimeout(r, 3000 * attempt));
+    if (attempt < attempts) {
+      await new Promise((r) => setTimeout(r, GEMINI_RETRY_BACKOFF_MS));
+    }
   }
+  return new Response("Gemini request failed", { status: 503 });
 }
 
 async function perceiveViaGemini(
