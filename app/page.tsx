@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Camera } from "lucide-react";
 import { JURISDICTIONS, Jurisdiction, streamsFor } from "@/lib/corpus";
 import {
   createVerdictController,
@@ -13,6 +14,7 @@ import { JurisdictionToggle } from "@/app/components/JurisdictionToggle";
 import { VerdictCard } from "@/app/components/VerdictCard";
 import { Tier2Flow } from "@/app/components/Tier2Flow";
 import { SampleGallery } from "@/app/components/SampleGallery";
+import { PerceptionCard } from "@/app/components/PerceptionCard";
 
 const SAMPLES: Array<{ id: string; label: string; publicPath: string }> = [
   { id: "B05", label: "Banana peels", publicPath: "/benchmark_images/B05.svg" },
@@ -216,18 +218,34 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-paper text-ink">
-      <div className="mx-auto max-w-6xl px-4 py-8">
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold text-ink">WasteLens Global</h1>
-          <p className="mt-1">Perception proposes. The law decides.</p>
-          <p className="mt-1 text-xs text-muted">
-            Verdicts are deterministic matrix lookups against verified corpus rows
-            (India SWM 2026, NYC Local Law 19 / §16-324, England SI 2025/140). Perception
-            runs once per image and is cached across jurisdiction switch.
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 overflow-hidden"
+      >
+        <div className="absolute -left-24 -top-40 h-[420px] w-[420px] animate-drift rounded-full bg-tier1/15 blur-3xl" />
+        <div className="absolute right-[-12%] top-16 h-[380px] w-[380px] animate-drift rounded-full bg-tier2/10 blur-3xl [animation-delay:-6s]" />
+        <div className="absolute left-[38%] top-[480px] h-[300px] w-[300px] animate-drift rounded-full bg-tier3/10 blur-3xl [animation-delay:-12s]" />
+        <div className="absolute inset-x-0 top-0 h-[480px] bg-gradient-to-b from-transparent via-paper/60 to-paper" />
+      </div>
+
+      <div className="relative mx-auto max-w-6xl px-4 py-8">
+        <header className="mb-10 pt-2 md:pt-8">
+          <p className="font-mono text-xs uppercase tracking-[0.35em] text-tier2">
+            Perception proposes.
+          </p>
+          <h1 className="mt-3 text-5xl font-bold tracking-tight text-ink md:text-6xl">
+            WasteLens <span className="text-tier1">Global</span>
+          </h1>
+          <p className="mt-3 text-xl text-muted md:text-2xl">The law decides.</p>
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted">
+            Photograph waste, get the statute. Verdicts are deterministic matrix lookups
+            against verified corpus rows — India SWM 2026, NYC Local Law 19 / §16-324,
+            England SI 2025/140. Perception runs once per image and is cached across
+            jurisdiction switches.
           </p>
         </header>
 
-        <div className="mb-4 flex flex-wrap gap-1 rounded-sm border border-hairline bg-card p-1">
+        <div className="mb-4 inline-flex flex-wrap gap-1 rounded-2xl border border-white/10 bg-white/[0.04] p-1 shadow-[0_4px_18px_rgba(0,0,0,0.25)] backdrop-blur-xl">
           {(["A", "B"] as const).map((m) => (
             <button
               key={m}
@@ -235,8 +253,8 @@ export default function Home() {
               onClick={() => setMode(m)}
               className={
                 mode === m
-                  ? "rounded-sm bg-ink px-4 py-1.5 text-sm font-medium text-paper"
-                  : "rounded-sm px-4 py-1.5 text-sm font-medium text-muted hover:text-ink"
+                  ? "rounded-xl bg-ink px-4 py-1.5 text-sm font-semibold text-paper"
+                  : "rounded-xl px-4 py-1.5 text-sm font-medium text-muted hover:text-ink"
               }
             >
               Mode {m}: {m === "A" ? "Snapshot perception" : "Known attributes (offline)"}
@@ -245,13 +263,14 @@ export default function Home() {
         </div>
 
         {mode === "A" && (
-          <section className="mb-6 rounded-sm border border-hairline bg-card p-5">
+          <section className="mb-6 rounded-2xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-xl">
             <h2 className="text-base font-semibold text-ink">Mode A — perception</h2>
 
             <div className="mt-4 space-y-4">
               <div className="flex flex-wrap items-center gap-3">
-                <label className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-sm bg-accent px-5 py-3 text-sm font-semibold text-paper hover:opacity-90">
-                  📷 Take a photo
+                <label className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-tier1 px-6 py-3 text-sm font-bold text-paper shadow-[0_4px_16px_rgba(127,209,160,0.25)] transition-opacity hover:opacity-90">
+                  <Camera className="h-5 w-5" aria-hidden="true" />
+                  Take a photo
                   <input type="file" accept="image/*" capture="environment" onChange={onFile} className="sr-only" />
                 </label>
                 {uploadDataUrl === null && (
@@ -272,8 +291,8 @@ export default function Home() {
                     }}
                     className={
                       sampleId === s.id && !uploadDataUrl
-                        ? "rounded-sm bg-ink px-3 py-1 text-xs font-medium text-paper"
-                        : "rounded-sm border border-hairline bg-card px-3 py-1 text-xs font-medium text-muted hover:border-accent hover:text-ink"
+                        ? "rounded-lg bg-ink px-3 py-1 text-xs font-semibold text-paper"
+                        : "rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1 text-xs font-medium text-muted hover:border-accent hover:text-ink"
                     }
                   >
                     {s.label}
@@ -281,14 +300,14 @@ export default function Home() {
                 ))}
               </div>
 
-              <div className="border border-hairline rounded-sm bg-paper p-3">
+              <div className="rounded-xl border border-white/10 bg-paper/40 p-3">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={shownImage}
                   alt="image to perceive"
                   width={640}
                   height={480}
-                  className="aspect-video w-full rounded-sm border border-hairline object-cover"
+                  className="aspect-video w-full rounded-lg border border-white/10 object-cover"
                 />
               </div>
 
@@ -296,7 +315,7 @@ export default function Home() {
                 type="button"
                 onClick={runPerception}
                 disabled={perceiving}
-                className="rounded-sm bg-ink px-5 py-2.5 text-sm font-semibold text-paper hover:opacity-90 disabled:opacity-50"
+                className="rounded-xl bg-ink px-5 py-2.5 text-sm font-semibold text-paper hover:opacity-90 disabled:opacity-50"
               >
                 {perceiving ? "Scanning…" : "Run perception"}
               </button>
@@ -318,31 +337,13 @@ export default function Home() {
               </div>
 
               {ctlState.perception?.output && (
-                <div className="flex flex-wrap gap-2 text-xs">
-                  <span className="rounded-sm border border-hairline bg-paper px-2 py-1 text-ink">
-                    {ctlState.perception.output.object_class}
-                  </span>
-                  <span className="rounded-sm border border-hairline bg-paper px-2 py-1 text-ink">
-                    {ctlState.perception.output.material_surface}
-                  </span>
-                  <span className="rounded-sm border border-hairline bg-paper px-2 py-1 text-ink">
-                    contaminated: {ctlState.perception.output.contamination ? "yes" : "no"}
-                  </span>
-                  {ctlState.perception.output.hazard_flags.map((h) => (
-                    <span key={h} className="rounded-sm border border-tier3 bg-paper px-2 py-1 text-tier3">
-                      {h}
-                    </span>
-                  ))}
-                  <span className="rounded-sm border border-hairline bg-paper px-2 py-1 text-ink">
-                    confidence {(ctlState.perception.output.confidence * 100).toFixed(0)}%
-                  </span>
-                  <span className="rounded-sm border border-hairline bg-paper px-2 py-1 font-mono text-muted">
-                    {ctlState.perception.model_id ?? "no model"}
-                  </span>
-                </div>
+                <PerceptionCard
+                  result={ctlState.perception.output}
+                  modelId={ctlState.perception.model_id}
+                />
               )}
               {perceptionNote && (
-                <p className="rounded-sm border border-tier3 border-l-2 bg-paper px-3 py-2 text-sm text-tier3">
+                <p className="rounded-xl border border-tier3/40 border-l-2 bg-tier3/10 px-3 py-2 text-sm text-tier3">
                   {perceptionNote}
                 </p>
               )}
@@ -374,7 +375,7 @@ export default function Home() {
         )}
 
         {mode === "B" && (
-          <section className="mb-6 rounded-sm border border-hairline bg-card p-5">
+          <section className="mb-6 rounded-2xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-xl">
             <h2 className="text-base font-semibold text-ink">Mode B — local rules → matrix</h2>
             <button
               type="button"
@@ -396,7 +397,7 @@ export default function Home() {
                     <select
                       value={bStream}
                       onChange={(e) => setBStream(e.target.value)}
-                      className="rounded-sm border border-hairline bg-card px-2 py-1.5 text-sm text-ink"
+                      className="rounded-lg border border-white/10 bg-card px-2 py-1.5 text-sm text-ink"
                     >
                       {bStreamOptions.map((s) => (
                         <option key={s} value={s}>
@@ -410,7 +411,7 @@ export default function Home() {
                     <select
                       value={bScope}
                       onChange={(e) => setBScope(e.target.value)}
-                      className="rounded-sm border border-hairline bg-card px-2 py-1.5 text-sm text-ink"
+                      className="rounded-lg border border-white/10 bg-card px-2 py-1.5 text-sm text-ink"
                     >
                       <option value="households">Households</option>
                       <option value="commercial">Commercial</option>
@@ -432,7 +433,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={runModeB}
-                  className="rounded-sm bg-ink px-4 py-2 text-sm font-semibold text-paper hover:opacity-90"
+                  className="rounded-xl bg-ink px-4 py-2 text-sm font-semibold text-paper hover:opacity-90"
                 >
                   Get verdict (Mode B)
                 </button>
@@ -450,7 +451,7 @@ export default function Home() {
         )}
 
         {ctlState.perception?.output && (
-          <section className="mb-6 rounded-sm border border-hairline bg-card p-5">
+          <section className="animate-rise mb-6 rounded-2xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-xl">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h2 className="text-base font-semibold text-ink">Docket</h2>
               <JurisdictionToggle value={activeJuris} onChange={onToggle} />

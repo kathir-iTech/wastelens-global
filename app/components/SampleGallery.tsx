@@ -3,9 +3,9 @@ import { TierBadge, Tier } from "./TierBadge";
 import { cn } from "@/lib/cn";
 
 const TIER_BAR: Record<Tier, string> = {
-  1: "border-l-tier1",
-  2: "border-l-tier2",
-  3: "border-l-tier3",
+  1: "border-l-tier1 bg-tier1/[0.07]",
+  2: "border-l-tier2 bg-tier2/[0.07]",
+  3: "border-l-tier3 bg-tier3/[0.07]",
 };
 
 interface GalleryVerdict {
@@ -54,20 +54,20 @@ export function SampleGallery({ onSelect }: { onSelect?: (itemId: string, imageP
             <article
               key={c.case_id}
               className={cn(
-                "flex flex-col overflow-hidden rounded-sm border border-hairline border-l-4 bg-card",
+                "flex flex-col overflow-hidden rounded-2xl border border-white/10 border-l-4 shadow-[0_8px_32px_rgba(0,0,0,0.25)] backdrop-blur-xl",
                 TIER_BAR[tier],
                 onSelect ? "cursor-pointer hover:opacity-90" : ""
               )}
               onClick={() => onSelect?.(c.item_id, c.image)}
             >
-              <div className="border-b border-hairline p-3">
+              <div className="border-b border-white/10 p-3">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={`/${c.image.replaceAll("\\", "/")}`}
                   alt={`${c.label} (${c.item_id})`}
                   width={640}
                   height={480}
-                  className="aspect-video w-full rounded-sm border border-hairline object-cover"
+                  className="aspect-video w-full rounded-lg border border-white/10 object-cover"
                 />
               </div>
               <div className="flex flex-1 flex-col gap-2 p-4">

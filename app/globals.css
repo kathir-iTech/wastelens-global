@@ -2,21 +2,48 @@
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap");
 
 @theme {
-  --color-paper: #f1f2ed;
-  --color-card: #fafaf5;
-  --color-ink: #1b2a22;
-  --color-muted: #5b645c;
-  --color-hairline: #cfd3c6;
-  --color-tier1: #2f6f4e;
-  --color-tier2: #9c6b1f;
-  --color-tier3: #8b3a3a;
-  --color-accent: #3b5a7a;
+  --color-paper: #0c120f;
+  --color-card: #141c17;
+  --color-ink: #edf2ec;
+  --color-muted: #93a19a;
+  --color-hairline: rgba(237, 242, 236, 0.1);
+  --color-tier1: #7fd1a0;
+  --color-tier2: #f2c46f;
+  --color-tier3: #ef8f8f;
+  --color-accent: #7aa7cf;
   --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --animate-rise: rise 0.35s ease-out both;
+  --animate-drift: drift 18s ease-in-out infinite;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes drift {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    33% {
+      transform: translate(28px, -20px) scale(1.08);
+    }
+    66% {
+      transform: translate(-24px, 16px) scale(0.94);
+    }
+  }
 }
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 html,
@@ -37,4 +64,13 @@ body {
 }
 .docket-scroll::-webkit-scrollbar {
   display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-drift {
+    animation: none;
+  }
+  .animate-rise {
+    animation: none;
+  }
 }

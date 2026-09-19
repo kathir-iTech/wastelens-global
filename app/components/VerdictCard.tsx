@@ -2,10 +2,10 @@ import { Verdict } from "@/lib/matrix";
 import { TierBadge, TierExplanation, Tier } from "./TierBadge";
 import { cn } from "@/lib/cn";
 
-const TIER_BAR: Record<Tier, string> = {
-  1: "border-l-tier1",
-  2: "border-l-tier2",
-  3: "border-l-tier3",
+const TIER_STYLE: Record<Tier, string> = {
+  1: "border-l-tier1 bg-tier1/[0.07]",
+  2: "border-l-tier2 bg-tier2/[0.07]",
+  3: "border-l-tier3 bg-tier3/[0.07]",
 };
 
 export function VerdictCard({
@@ -30,13 +30,18 @@ export function VerdictCard({
       : `${verdict.fine_bracket.currency} ${verdict.fine_bracket.min}–${verdict.fine_bracket.max}`;
 
   return (
-    <article className={cn("border border-hairline border-l-4 bg-card p-5", TIER_BAR[tier])}>
+    <article
+      className={cn(
+        "rounded-2xl border border-white/10 border-l-4 p-5 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-xl",
+        TIER_STYLE[tier]
+      )}
+    >
       <header className="flex flex-wrap items-baseline justify-between gap-2">
         <TierBadge tier={tier} />
         <span className="font-mono text-xs text-muted">{jurisdiction}</span>
       </header>
 
-      <h3 className="mt-3 text-lg font-semibold text-ink">
+      <h3 className="mt-3 text-2xl font-bold tracking-tight text-ink">
         {verdict.stream ?? "Unknown stream"}
       </h3>
       {verdict.clause_id && (

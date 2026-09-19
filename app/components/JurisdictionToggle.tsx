@@ -25,10 +25,10 @@ export function JurisdictionToggle({
             aria-selected={value === j}
             onClick={() => onChange(j)}
             className={cn(
-              "rounded-sm border px-3 py-1.5 text-sm font-medium transition-colors",
+              "rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors",
               value === j
-                ? "border-accent bg-accent text-white"
-                : "border-hairline bg-card text-muted hover:border-accent hover:text-ink"
+                ? "border-accent/60 bg-accent/20 text-ink"
+                : "border-white/10 bg-white/[0.04] text-muted hover:border-accent hover:text-ink"
             )}
           >
             {SHORT[j]}
@@ -41,7 +41,7 @@ export function JurisdictionToggle({
             key={j}
             className={cn(
               "h-1.5 w-1.5 rounded-full transition-colors",
-              value === j ? "bg-accent" : "bg-hairline"
+              value === j ? "bg-accent" : "bg-white/15"
             )}
           />
         ))}
