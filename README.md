@@ -24,6 +24,7 @@ All real, in use, in this repo — nothing aspirational:
 
 - **Next.js 15** + **React 19** + **TypeScript** + **Tailwind CSS v4**, deployed on **Vercel**
 - **Gemini 3.8 Flash** (vision): the current Flash-tier vision model resolved at build time from `https://ai.google.dev/gemini-api/docs/models` by `scripts/resolve-gemini-model.ts` — today **Gemini 3.8 Flash**. No model string is hardcoded anywhere. Local YOLO12n / RF-DETR was explicitly considered and dropped: no weights or inference backend exist, and with 3.8 Flash confirmed GA (2 Sep 2026, image-capable, free tier) a second path added no value. The `lib/perception.ts` seam still accepts `./models/*.onnx` later without touching the matrix.
+- **IBM Plex Sans / IBM Plex Mono** for type (loaded from Google Fonts at runtime; no build-time font fetch).
 - **No Supabase, no pgvector.** Retrieval is the deterministic local matcher described below — embeddings were deliberately not added.
 
 ## Design decisions (said straight)

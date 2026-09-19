@@ -59,6 +59,11 @@ broken one, and the checks above distinguish the two.
 ## Safety notes
 
 - `.env.local` is gitignored and never deployed; the Vercel env var is the only source
-  for the key in production.
+  for the key in production. **The exact name must be `GEMINI_API_KEY`** — a misspelled
+  variant (e.g. `GEMII_API_KEY`) compiles and serves but Mode A live perception returns
+  `"GEMINI_API_KEY not set; fallback perception unavailable"` (verified on the live URL).
+- Fonts: IBM Plex Sans/Mono load from Google Fonts at runtime; the app shell is static
+  and the layout, shapes, palette, and citations hold in the system fallback if fonts
+  are unreachable.
 - `npm run evaluate` talks to the Gemini API from wherever it runs (it uses a local
   `GEMINI_API_KEY`); it is not tied to this deploy.

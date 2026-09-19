@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { JURISDICTIONS, Jurisdiction, streamsFor } from "@/lib/corpus";
 import {
   createVerdictController,
@@ -14,15 +14,27 @@ import { VerdictCard } from "@/app/components/VerdictCard";
 import { Tier2Flow } from "@/app/components/Tier2Flow";
 import { SampleGallery } from "@/app/components/SampleGallery";
 
-const SAMPLES: Array<{ id: string; label: string; dataPath: string; publicPath: string }> = [
-  { id: "B05", label: "Banana peels", dataPath: "data/benchmark_images/B05.svg", publicPath: "/benchmark_images/B05.svg" },
-  { id: "B01", label: "Empty glass jar", dataPath: "data/benchmark_images/B01.svg", publicPath: "/benchmark_images/B01.svg" },
-  { id: "B12", label: "Paint can", dataPath: "data/benchmark_images/B12.svg", publicPath: "/benchmark_images/B12.svg" },
-  { id: "B04", label: "Cardboard box", dataPath: "data/benchmark_images/B04.svg", publicPath: "/benchmark_images/B04.svg" },
-  { id: "B13", label: "Grass clippings", dataPath: "data/benchmark_images/B13.svg", publicPath: "/benchmark_images/B13.svg" },
-  { id: "B17", label: "Construction debris", dataPath: "data/benchmark_images/B17.svg", publicPath: "/benchmark_images/B17.svg" },
-  { id: "B14", label: "Used diaper", dataPath: "data/benchmark_images/B14.svg", publicPath: "/benchmark_images/B14.svg" },
+const SAMPLES: Array<{ id: string; label: string; publicPath: string }> = [
+  { id: "B05", label: "Banana peels", publicPath: "/benchmark_images/B05.svg" },
+  { id: "B01", label: "Empty glass jar", publicPath: "/benchmark_images/B01.svg" },
+  { id: "B12", label: "Paint can", publicPath: "/benchmark_images/B12.svg" },
+  { id: "B04", label: "Cardboard box", publicPath: "/benchmark_images/B04.svg" },
+  { id: "B13", label: "Grass clippings", publicPath: "/benchmark_images/B13.svg" },
+  { id: "B17", label: "Construction debris", publicPath: "/benchmark_images/B17.svg" },
+  { id: "B14", label: "Used diaper", publicPath: "/benchmark_images/B14.svg" },
 ];
+
+async function toDataUri(href: string): Promise<string> {
+  const res = await fetch(href);
+  if (!res.ok) throw new Error(`fetch ${href} -> ${res.status}`);
+  const blob = await res.blob();
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(new Error("read image blob failed"));
+    reader.readAsDataURL(blob);
+  });
+}
 
 interface PerceptionOutcomeLike {
   output: {
@@ -48,9 +60,7 @@ export default function Home() {
       const res = await fetch("/api/perceive", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(
-          ref.startsWith("data:") ? { image_data: ref } : { image_path: ref }
-        ),
+        body: JSON.stringify({ image_data: ref }),
       });
       if (!res.ok) {
         const body = (await res.json().catch(() => ({}))) as { error?: string };
@@ -62,7 +72,6 @@ export default function Home() {
   }
   const ctl = ctlRef.current;
   const ctlState = ctl.getState();
-  const verdict = activeJuris !== null ? ctlState.verdicts[activeJuris] : undefined;
 
   const [sampleId, setSampleId] = useState<string>(SAMPLES[0].id);
   const [uploadDataUrl, setUploadDataUrl] = useState<string | null>(null);
@@ -93,9 +102,11 @@ export default function Home() {
     setScanStage("identifying");
     const stageTimer = setTimeout(() => setScanStage("checking"), 800);
     try {
-      const ref = uploadDataUrl ?? sample.dataPath;
+      const ref = uploadDataUrl ?? (await toDataUri(sample.publicPath));
       await ctl.perceiveImage(ref);
-      await ctl.selectJurisdiction(activeJuris, scope);
+      for (const juris of JURISDICTIONS) {
+        await ctl.selectJurisdiction(juris, scope);
+      }
       setVersion((v) => v + 1);
       const st = ctl.getState();
       if (st.perception?.output === null) {
@@ -110,10 +121,41 @@ export default function Home() {
     }
   }
 
+  const docketRefs = useRef<Record<Jurisdiction, HTMLDivElement | null>>({
+    india: null,
+    nyc: null,
+    england: null,
+  });
+
   async function onToggle(next: Jurisdiction) {
     setActiveJuris(next);
-    await ctl.selectJurisdiction(next, scope);
     setVersion((v) => v + 1);
+    if (mode === "A") {
+      docketRefs.current[next]?.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      });
+      await ctl.selectJurisdiction(next, scope);
+    }
+  }
+
+  function onDocketScroll(e: React.UIEvent<HTMLDivElement>) {
+    const el = e.currentTarget;
+    const mid = el.scrollLeft + el.clientWidth / 2;
+    const juris = mode === "A" ? JURISDICTIONS : [activeJuris];
+    let best = juris[0];
+    let bestDist = Infinity;
+    for (let i = 0; i < el.children.length; i++) {
+      const c = el.children[i] as HTMLElement;
+      const cmid = c.offsetLeft + c.offsetWidth / 2;
+      const d = Math.abs(cmid - mid);
+      if (d < bestDist) {
+        bestDist = d;
+        best = juris[i];
+      }
+    }
+    if (best !== activeJuris) setActiveJuris(best);
   }
 
   async function onClarify(answer: Record<string, unknown>, sc: string) {
@@ -157,22 +199,25 @@ export default function Home() {
     setBUsedNetwork(used_network);
   }
 
+  const docketJuris: Jurisdiction[] = mode === "A" ? JURISDICTIONS : [activeJuris];
+
+  const verdictFor = (j: Jurisdiction) =>
+    mode === "A" ? ctlState.verdicts[j] : j === activeJuris ? bVerdict ?? undefined : undefined;
+
   return (
-    <main className="min-h-screen bg-slate-100 py-10">
-      <div className="mx-auto max-w-6xl px-4">
+    <main className="min-h-screen bg-paper text-ink">
+      <div className="mx-auto max-w-6xl px-4 py-8">
         <header className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900">WasteLens Global</h1>
-          <p className="mt-1 text-slate-600">
-            Perception proposes. The law decides.
-          </p>
-          <p className="mt-1 text-xs text-slate-500">
+          <h1 className="text-3xl font-bold text-ink">WasteLens Global</h1>
+          <p className="mt-1">Perception proposes. The law decides.</p>
+          <p className="mt-1 text-xs text-muted">
             Verdicts are deterministic matrix lookups against verified corpus rows
-            (India SWM 2026 · NYC LL85/§16-324 · England SI 2025/140). Perception
+            (India SWM 2026, NYC Local Law 19 / §16-324, England SI 2025/140). Perception
             runs once per image and is cached across jurisdiction switch.
           </p>
         </header>
 
-        <div className="mb-4 flex flex-wrap gap-1 rounded-lg border border-slate-200 bg-white p-1">
+        <div className="mb-4 flex flex-wrap gap-1 rounded-sm border border-hairline bg-card p-1">
           {(["A", "B"] as const).map((m) => (
             <button
               key={m}
@@ -180,8 +225,8 @@ export default function Home() {
               onClick={() => setMode(m)}
               className={
                 mode === m
-                  ? "rounded-md bg-slate-900 px-4 py-1.5 text-sm font-medium text-white"
-                  : "rounded-md px-4 py-1.5 text-sm font-medium text-slate-600 hover:text-slate-900"
+                  ? "rounded-sm bg-ink px-4 py-1.5 text-sm font-medium text-paper"
+                  : "rounded-sm px-4 py-1.5 text-sm font-medium text-muted hover:text-ink"
               }
             >
               Mode {m}: {m === "A" ? "Snapshot perception" : "Known attributes (offline)"}
@@ -190,9 +235,9 @@ export default function Home() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="text-base font-semibold text-slate-900">
-              {mode === "A" ? "Mode A — perception" : "Mode B — local rules.json → matrix"}
+          <section className="rounded-sm border border-hairline bg-card p-5">
+            <h2 className="text-base font-semibold text-ink">
+              {mode === "A" ? "Mode A — perception" : "Mode B — local rules → matrix"}
             </h2>
 
             {mode === "A" ? (
@@ -208,8 +253,8 @@ export default function Home() {
                       }}
                       className={
                         sampleId === s.id && !uploadDataUrl
-                          ? "rounded-full bg-slate-900 px-3 py-1 text-xs font-medium text-white"
-                          : "rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-600 hover:border-slate-400"
+                          ? "rounded-sm bg-ink px-3 py-1 text-xs font-medium text-paper"
+                          : "rounded-sm border border-hairline bg-card px-3 py-1 text-xs font-medium text-muted hover:border-accent hover:text-ink"
                       }
                     >
                       {s.label}
@@ -217,16 +262,16 @@ export default function Home() {
                   ))}
                 </div>
 
-                <input type="file" accept="image/*" onChange={onFile} className="block w-full text-xs" />
+                <input type="file" accept="image/*" onChange={onFile} className="block w-full text-xs text-muted" />
 
-                <div className="border border-slate-100 rounded-lg bg-slate-50 p-3">
+                <div className="border border-hairline rounded-sm bg-paper p-3">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={shownImage}
                     alt="image to perceive"
                     width={640}
                     height={480}
-                    className="aspect-video w-full rounded-md object-cover"
+                    className="aspect-video w-full rounded-sm border border-hairline object-cover"
                   />
                 </div>
 
@@ -234,68 +279,71 @@ export default function Home() {
                   type="button"
                   onClick={runPerception}
                   disabled={perceiving}
-                  className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700 disabled:opacity-50"
+                  className="rounded-sm bg-ink px-4 py-2 text-sm font-semibold text-paper hover:opacity-90 disabled:opacity-50"
                 >
                   {perceiving ? "Scanning…" : "Run perception"}
                 </button>
 
                 {scanStage !== "idle" && (
-                  <p className="animate-pulse text-xs font-medium text-slate-600" role="status">
+                  <p className="animate-pulse text-xs font-medium text-ink" role="status">
                     {scanStage === "identifying"
                       ? "Identifying item…"
                       : `Checking ${JURISDICTION_LABELS[activeJuris]} law…`}
                   </p>
                 )}
 
-                <div className="text-xs text-slate-500">
+                <div className="text-xs text-muted">
                   Perception invocations this session:{" "}
                   <span className="font-mono font-semibold">{ctlState.perceiveInvocations}</span>
                   {ctlState.perceiveInvocations > 0 && (
-                    <span className="text-slate-400"> — cached across jurisdiction switch</span>
+                    <span> — cached across jurisdiction switch</span>
                   )}
                 </div>
 
                 {ctlState.perception?.output && (
                   <div className="flex flex-wrap gap-2 text-xs">
-                    <span className="rounded-md bg-slate-100 px-2 py-1 text-slate-700">
-                      {ctlState.perception.output.object_class} · {ctlState.perception.output.material_surface}
+                    <span className="rounded-sm border border-hairline bg-paper px-2 py-1 text-ink">
+                      {ctlState.perception.output.object_class}
                     </span>
-                    <span className="rounded-md bg-slate-100 px-2 py-1 text-slate-700">
+                    <span className="rounded-sm border border-hairline bg-paper px-2 py-1 text-ink">
+                      {ctlState.perception.output.material_surface}
+                    </span>
+                    <span className="rounded-sm border border-hairline bg-paper px-2 py-1 text-ink">
                       contaminated: {ctlState.perception.output.contamination ? "yes" : "no"}
                     </span>
                     {ctlState.perception.output.hazard_flags.map((h) => (
-                      <span key={h} className="rounded-md bg-rose-50 px-2 py-1 text-rose-700">
+                      <span key={h} className="rounded-sm border border-tier3 bg-paper px-2 py-1 text-tier3">
                         {h}
                       </span>
                     ))}
-                    <span className="rounded-md bg-slate-100 px-2 py-1 text-slate-700">
+                    <span className="rounded-sm border border-hairline bg-paper px-2 py-1 text-ink">
                       confidence {(ctlState.perception.output.confidence * 100).toFixed(0)}%
                     </span>
-                    <span className="rounded-md bg-slate-100 px-2 py-1 font-mono text-slate-500">
+                    <span className="rounded-sm border border-hairline bg-paper px-2 py-1 font-mono text-muted">
                       {ctlState.perception.model_id ?? "no model"}
                     </span>
                   </div>
                 )}
                 {perceptionNote && (
-                  <p className="rounded-lg bg-rose-50 px-3 py-2 text-xs text-rose-700">
+                  <p className="rounded-sm border border-tier3 border-l-2 bg-paper px-3 py-2 text-sm text-tier3">
                     {perceptionNote}
                   </p>
                 )}
               </div>
             ) : (
               <div className="mt-4 space-y-3">
-                <p className="text-xs text-slate-500">
-                  No photograph required. Known attributes are resolved against the
-                  bundled rules corpus entirely on-device — script enforces zero
-                  network calls (tests override globalThis.fetch to throw).
+                <p className="text-xs text-muted">
+                  No photograph required. Known attributes are resolved against the bundled
+                  rules corpus entirely on-device — script enforces zero network calls (tests
+                  override globalThis.fetch to throw).
                 </p>
                 <div className="grid grid-cols-2 gap-3">
-                  <label className="flex flex-col gap-1 text-xs font-medium text-slate-600">
+                  <label className="flex flex-col gap-1 text-xs font-medium text-ink">
                     Stream
                     <select
                       value={bStream}
                       onChange={(e) => setBStream(e.target.value)}
-                      className="rounded-md border border-slate-300 px-2 py-1.5 text-sm"
+                      className="rounded-sm border border-hairline bg-card px-2 py-1.5 text-sm text-ink"
                     >
                       {bStreamOptions.map((s) => (
                         <option key={s} value={s}>
@@ -304,19 +352,19 @@ export default function Home() {
                       ))}
                     </select>
                   </label>
-                  <label className="flex flex-col gap-1 text-xs font-medium text-slate-600">
+                  <label className="flex flex-col gap-1 text-xs font-medium text-ink">
                     Source
                     <select
                       value={bScope}
                       onChange={(e) => setBScope(e.target.value)}
-                      className="rounded-md border border-slate-300 px-2 py-1.5 text-sm"
+                      className="rounded-sm border border-hairline bg-card px-2 py-1.5 text-sm text-ink"
                     >
                       <option value="households">Households</option>
                       <option value="commercial">Commercial</option>
                     </select>
                   </label>
                 </div>
-                <label className="flex flex-col gap-1 text-xs font-medium text-slate-600">
+                <label className="flex flex-col gap-1 text-xs font-medium text-ink">
                   Perception confidence: {(bConfidence * 100).toFixed(0)}%
                   <input
                     type="range"
@@ -325,20 +373,21 @@ export default function Home() {
                     step={0.01}
                     value={bConfidence}
                     onChange={(e) => setBConfidence(Number(e.target.value))}
+                    className="accent-ink"
                   />
                 </label>
                 <button
                   type="button"
                   onClick={runModeB}
-                  className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700"
+                  className="rounded-sm bg-ink px-4 py-2 text-sm font-semibold text-paper hover:opacity-90"
                 >
                   Get verdict (Mode B)
                 </button>
-                <p className="text-xs text-slate-500">
-                  network calls: <span className="font-mono font-semibold">{fetchCountShown}</span>{" "}
+                <p className="text-xs text-muted">
+                  network calls: <span className="font-mono font-semibold text-ink">{fetchCountShown}</span>{" "}
                   {bVerdict && (
-                    <span className="text-emerald-700">
-                      · Mode B used_network={String(bUsedNetwork)}
+                    <span className="text-tier1">
+                      Mode B used_network={String(bUsedNetwork)}
                     </span>
                   )}
                 </p>
@@ -346,23 +395,41 @@ export default function Home() {
             )}
           </section>
 
-          <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <section className="rounded-sm border border-hairline bg-card p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2 className="text-base font-semibold text-slate-900">The law</h2>
+              <h2 className="text-base font-semibold text-ink">Docket</h2>
               <JurisdictionToggle value={activeJuris} onChange={onToggle} />
             </div>
-            <p className="mt-2 text-xs text-slate-500">
-              Same perception output, jurisdiction switched client-side — the
-              matrix re-runs but perception does not.
+            <p className="mt-2 text-xs text-muted">
+              One perception, three rulings. The matrix re-runs per jurisdiction; perception
+              does not.
             </p>
-            <div className="mt-4">
-              <VerdictCard verdict={mode === "A" ? verdict : bVerdict ?? undefined} jurisdiction={JURISDICTION_LABELS[activeJuris]} />
+
+            <div className="docket-scroll -mx-5 mt-4 flex snap-x gap-3 overflow-x-auto px-5 pb-1" onScroll={onDocketScroll}>
+              {docketJuris.map((j) => (
+                <div
+                  key={j}
+                  ref={(el) => {
+                    docketRefs.current[j] = el;
+                  }}
+                  className="docket-ruling w-[86%] shrink-0 sm:w-full"
+                >
+                  {(() => {
+                    const v = verdictFor(j);
+                    return (
+                      <>
+                        <VerdictCard verdict={v} jurisdiction={JURISDICTION_LABELS[j]} />
+                        {mode === "A" && v && v.tier === 2 && (
+                          <div className="mt-3">
+                            <Tier2Flow verdict={v} jurisdiction={j} onAnswer={onClarify} />
+                          </div>
+                        )}
+                      </>
+                    );
+                  })()}
+                </div>
+              ))}
             </div>
-            {mode === "A" && verdict && verdict.tier === 2 && (
-              <div className="mt-3">
-                <Tier2Flow verdict={verdict} jurisdiction={activeJuris} onAnswer={onClarify} />
-              </div>
-            )}
           </section>
         </div>
 

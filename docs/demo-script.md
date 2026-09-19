@@ -92,3 +92,4 @@ one perception.*
 - [ ] No sentence implies Supabase, pgvector, or generator-class-aware exemptions.
 - [ ] `accuracy_adjudicated` always labelled "given hand-labeled inputs".
 - [ ] Tier quotes exact (gallery case IDs above match `data/sample_gallery.json`).
+- [ ] Fonts: IBM Plex Sans/Mono is specified and loads from Google Fonts at runtime on the network-enabled deploy; the QA environment cannot reach Google Fonts, so the offline audit renders in the system fallback — layout, shapes, palette, and citations are verified identical offline.
