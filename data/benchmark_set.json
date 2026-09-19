@@ -6,324 +6,1074 @@
     {
       "id": "B01",
       "label": "empty glass jar",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B01.svg", "provenance": "procedural SVG; see sourcing_manifest" },
-      "perception_attrs": { "object_class": "glass jar", "material_surface": "glass", "contamination": false, "hazard_flags": [], "confidence": 0.97, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B01.svg",
+        "provenance": "procedural SVG; see sourcing_manifest",
+        "publicPath": "/benchmark_images/B01.svg"
+      },
+      "perception_attrs": {
+        "object_class": "glass jar",
+        "material_surface": "glass",
+        "contamination": false,
+        "hazard_flags": [],
+        "confidence": 0.97,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 1, "stream": "dry", "scope": "households", "note": "glass → dry stream (SWM2026-dry-hh)" },
-        "nyc": { "tier": 1, "stream": "metal-plastic-glass", "scope": "households", "note": "NYC2024-recyclables-hh" },
-        "england": { "tier": 1, "stream": "metal-plastic-glass", "scope": "households", "note": "ENG2025-dry-hh" }
+        "india": {
+          "tier": 1,
+          "stream": "dry",
+          "scope": "households",
+          "note": "glass → dry stream (SWM2026-dry-hh)"
+        },
+        "nyc": {
+          "tier": 1,
+          "stream": "metal-plastic-glass",
+          "scope": "households",
+          "note": "NYC2024-recyclables-hh"
+        },
+        "england": {
+          "tier": 1,
+          "stream": "metal-plastic-glass",
+          "scope": "households",
+          "note": "ENG2025-dry-hh"
+        }
       },
       "composition_role": "common"
     },
     {
       "id": "B02",
       "label": "clear plastic water bottle, empty",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B02.svg", "provenance": "procedural SVG; see sourcing_manifest" },
-      "perception_attrs": { "object_class": "plastic bottle", "material_surface": "plastic", "contamination": false, "hazard_flags": [], "confidence": 0.96, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B02.svg",
+        "provenance": "procedural SVG; see sourcing_manifest",
+        "publicPath": "/benchmark_images/B02.svg"
+      },
+      "perception_attrs": {
+        "object_class": "plastic bottle",
+        "material_surface": "plastic",
+        "contamination": false,
+        "hazard_flags": [],
+        "confidence": 0.96,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 1, "stream": "dry", "scope": "households", "note": "plastic → dry stream" },
-        "nyc": { "tier": 1, "stream": "metal-plastic-glass", "scope": "households", "note": "recyclables" },
-        "england": { "tier": 1, "stream": "metal-plastic-glass", "scope": "households", "note": "dry recyclable stream" }
+        "india": {
+          "tier": 1,
+          "stream": "dry",
+          "scope": "households",
+          "note": "plastic → dry stream"
+        },
+        "nyc": {
+          "tier": 1,
+          "stream": "metal-plastic-glass",
+          "scope": "households",
+          "note": "recyclables"
+        },
+        "england": {
+          "tier": 1,
+          "stream": "metal-plastic-glass",
+          "scope": "households",
+          "note": "dry recyclable stream"
+        }
       },
       "composition_role": "common"
     },
     {
       "id": "B03",
       "label": "aluminium drink can, rinsed",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B03.svg", "provenance": "procedural SVG; see sourcing_manifest" },
-      "perception_attrs": { "object_class": "aluminium can", "material_surface": "metal", "contamination": false, "hazard_flags": [], "confidence": 0.94, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B03.svg",
+        "provenance": "procedural SVG; see sourcing_manifest",
+        "publicPath": "/benchmark_images/B03.svg"
+      },
+      "perception_attrs": {
+        "object_class": "aluminium can",
+        "material_surface": "metal",
+        "contamination": false,
+        "hazard_flags": [],
+        "confidence": 0.94,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 1, "stream": "dry", "scope": "households", "note": "metal → dry stream" },
-        "nyc": { "tier": 1, "stream": "metal-plastic-glass", "scope": "households", "note": "recyclables" },
-        "england": { "tier": 1, "stream": "metal-plastic-glass", "scope": "households", "note": "dry recyclable stream" }
+        "india": {
+          "tier": 1,
+          "stream": "dry",
+          "scope": "households",
+          "note": "metal → dry stream"
+        },
+        "nyc": {
+          "tier": 1,
+          "stream": "metal-plastic-glass",
+          "scope": "households",
+          "note": "recyclables"
+        },
+        "england": {
+          "tier": 1,
+          "stream": "metal-plastic-glass",
+          "scope": "households",
+          "note": "dry recyclable stream"
+        }
       },
       "composition_role": "common"
     },
     {
       "id": "B04",
       "label": "corrugated cardboard shipping box",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B04.svg", "provenance": "procedural SVG; see sourcing_manifest" },
-      "perception_attrs": { "object_class": "cardboard box", "material_surface": "paper", "contamination": false, "hazard_flags": [], "confidence": 0.95, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B04.svg",
+        "provenance": "procedural SVG; see sourcing_manifest",
+        "publicPath": "/benchmark_images/B04.svg"
+      },
+      "perception_attrs": {
+        "object_class": "cardboard box",
+        "material_surface": "paper",
+        "contamination": false,
+        "hazard_flags": [],
+        "confidence": 0.95,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 1, "stream": "dry", "scope": "households", "note": "paper/cardboard → dry stream" },
-        "nyc": { "tier": 1, "stream": "paper-card", "scope": "households", "note": "NYC2024-paper-hh" },
-        "england": { "tier": 1, "stream": "paper-card", "scope": "households", "note": "paper/card → fibre stream (ENG2025-paper-hh)" }
+        "india": {
+          "tier": 1,
+          "stream": "dry",
+          "scope": "households",
+          "note": "paper/cardboard → dry stream"
+        },
+        "nyc": {
+          "tier": 1,
+          "stream": "paper-card",
+          "scope": "households",
+          "note": "NYC2024-paper-hh"
+        },
+        "england": {
+          "tier": 1,
+          "stream": "paper-card",
+          "scope": "households",
+          "note": "paper/card → fibre stream (ENG2025-paper-hh)"
+        }
       },
       "composition_role": "divergent"
     },
     {
       "id": "B05",
       "label": "banana peels",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B05.svg", "provenance": "procedural SVG; see sourcing_manifest" },
-      "perception_attrs": { "object_class": "banana peel", "material_surface": "organic", "contamination": false, "hazard_flags": [], "confidence": 0.98, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B05.svg",
+        "provenance": "procedural SVG; see sourcing_manifest",
+        "publicPath": "/benchmark_images/B05.svg"
+      },
+      "perception_attrs": {
+        "object_class": "banana peel",
+        "material_surface": "organic",
+        "contamination": false,
+        "hazard_flags": [],
+        "confidence": 0.98,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 1, "stream": "wet", "scope": "households", "note": "kitchen waste → wet stream (SWM2026-wet-hh)" },
-        "nyc": { "tier": 1, "stream": "food", "scope": "households", "note": "organics → NYC2024-food-hh" },
-        "england": { "tier": 1, "stream": "food", "scope": "households", "note": "food waste stream (ENG2025-food-hh)" }
+        "india": {
+          "tier": 1,
+          "stream": "wet",
+          "scope": "households",
+          "note": "kitchen waste → wet stream (SWM2026-wet-hh)"
+        },
+        "nyc": {
+          "tier": 1,
+          "stream": "food",
+          "scope": "households",
+          "note": "organics → NYC2024-food-hh"
+        },
+        "england": {
+          "tier": 1,
+          "stream": "food",
+          "scope": "households",
+          "note": "food waste stream (ENG2025-food-hh)"
+        }
       },
       "composition_role": "common"
     },
     {
       "id": "B06",
       "label": "apple core",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B06.svg", "provenance": "procedural SVG; see sourcing_manifest" },
-      "perception_attrs": { "object_class": "apple core", "material_surface": "organic", "contamination": false, "hazard_flags": [], "confidence": 0.97, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B06.svg",
+        "provenance": "procedural SVG; see sourcing_manifest",
+        "publicPath": "/benchmark_images/B06.svg"
+      },
+      "perception_attrs": {
+        "object_class": "apple core",
+        "material_surface": "organic",
+        "contamination": false,
+        "hazard_flags": [],
+        "confidence": 0.97,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 1, "stream": "wet", "scope": "households", "note": "" },
-        "nyc": { "tier": 1, "stream": "food", "scope": "households", "note": "" },
-        "england": { "tier": 1, "stream": "food", "scope": "households", "note": "" }
+        "india": {
+          "tier": 1,
+          "stream": "wet",
+          "scope": "households",
+          "note": ""
+        },
+        "nyc": {
+          "tier": 1,
+          "stream": "food",
+          "scope": "households",
+          "note": ""
+        },
+        "england": {
+          "tier": 1,
+          "stream": "food",
+          "scope": "households",
+          "note": ""
+        }
       },
       "composition_role": "common"
     },
     {
       "id": "B07",
       "label": "clean stack of white office paper",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B07.svg", "provenance": "procedural SVG; see sourcing_manifest" },
-      "perception_attrs": { "object_class": "paper stack", "material_surface": "paper", "contamination": false, "hazard_flags": [], "confidence": 0.96, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B07.svg",
+        "provenance": "procedural SVG; see sourcing_manifest",
+        "publicPath": "/benchmark_images/B07.svg"
+      },
+      "perception_attrs": {
+        "object_class": "paper stack",
+        "material_surface": "paper",
+        "contamination": false,
+        "hazard_flags": [],
+        "confidence": 0.96,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 1, "stream": "dry", "scope": "households", "note": "paper → dry stream" },
-        "nyc": { "tier": 1, "stream": "paper-card", "scope": "households", "note": "" },
-        "england": { "tier": 1, "stream": "paper-card", "scope": "households", "note": "office paper → fibre stream (ENG2025-paper-hh)" }
+        "india": {
+          "tier": 1,
+          "stream": "dry",
+          "scope": "households",
+          "note": "paper → dry stream"
+        },
+        "nyc": {
+          "tier": 1,
+          "stream": "paper-card",
+          "scope": "households",
+          "note": ""
+        },
+        "england": {
+          "tier": 1,
+          "stream": "paper-card",
+          "scope": "households",
+          "note": "office paper → fibre stream (ENG2025-paper-hh)"
+        }
       },
       "composition_role": "divergent"
     },
     {
       "id": "B08",
       "label": "empty glass wine bottle",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B08.svg", "provenance": "procedural SVG; see sourcing_manifest" },
-      "perception_attrs": { "object_class": "glass bottle", "material_surface": "glass", "contamination": false, "hazard_flags": [], "confidence": 0.95, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B08.svg",
+        "provenance": "procedural SVG; see sourcing_manifest",
+        "publicPath": "/benchmark_images/B08.svg"
+      },
+      "perception_attrs": {
+        "object_class": "glass bottle",
+        "material_surface": "glass",
+        "contamination": false,
+        "hazard_flags": [],
+        "confidence": 0.95,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 1, "stream": "dry", "scope": "households", "note": "" },
-        "nyc": { "tier": 1, "stream": "metal-plastic-glass", "scope": "households", "note": "" },
-        "england": { "tier": 1, "stream": "metal-plastic-glass", "scope": "households", "note": "" }
+        "india": {
+          "tier": 1,
+          "stream": "dry",
+          "scope": "households",
+          "note": ""
+        },
+        "nyc": {
+          "tier": 1,
+          "stream": "metal-plastic-glass",
+          "scope": "households",
+          "note": ""
+        },
+        "england": {
+          "tier": 1,
+          "stream": "metal-plastic-glass",
+          "scope": "households",
+          "note": ""
+        }
       },
       "composition_role": "common"
     },
     {
       "id": "B09",
       "label": "pizza box with grease stains",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B09.svg", "provenance": "procedural SVG (contaminated variant); see sourcing_manifest" },
-      "perception_attrs": { "object_class": "pizza box", "material_surface": "paper", "contamination": true, "hazard_flags": [], "confidence": 0.6, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B09.svg",
+        "provenance": "procedural SVG (contaminated variant); see sourcing_manifest",
+        "publicPath": "/benchmark_images/B09.svg"
+      },
+      "perception_attrs": {
+        "object_class": "pizza box",
+        "material_surface": "paper",
+        "contamination": true,
+        "hazard_flags": [],
+        "confidence": 0.6,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 2, "stream": "dry", "scope": "households", "note": "contaminated paper is dry-candidate; perception confidence 0.6 → clarify" },
-        "nyc": { "tier": 2, "stream": "paper-card", "scope": "households", "note": "grease → ambiguous recyclability → clarify" },
-        "england": { "tier": 2, "stream": "paper-card", "scope": "households", "note": "grease on fibre → ambiguous recyclability → clarify" }
+        "india": {
+          "tier": 2,
+          "stream": "dry",
+          "scope": "households",
+          "note": "contaminated paper is dry-candidate; perception confidence 0.6 → clarify"
+        },
+        "nyc": {
+          "tier": 2,
+          "stream": "paper-card",
+          "scope": "households",
+          "note": "grease → ambiguous recyclability → clarify"
+        },
+        "england": {
+          "tier": 2,
+          "stream": "paper-card",
+          "scope": "households",
+          "note": "grease on fibre → ambiguous recyclability → clarify"
+        }
       },
       "composition_role": "ambiguous"
     },
     {
       "id": "B10",
       "label": "takeout container with mixed food residue",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B10.svg", "provenance": "procedural SVG (contaminated variant); see sourcing_manifest" },
-      "perception_attrs": { "object_class": "takeout container", "material_surface": "plastic", "contamination": true, "hazard_flags": [], "confidence": 0.62, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B10.svg",
+        "provenance": "procedural SVG (contaminated variant); see sourcing_manifest",
+        "publicPath": "/benchmark_images/B10.svg"
+      },
+      "perception_attrs": {
+        "object_class": "takeout container",
+        "material_surface": "plastic",
+        "contamination": true,
+        "hazard_flags": [],
+        "confidence": 0.62,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 2, "stream": "dry", "scope": "households", "note": "unrinsed container → clarify" },
-        "nyc": { "tier": 2, "stream": "metal-plastic-glass", "scope": "households", "note": "food contamination → clarify" },
-        "england": { "tier": 2, "stream": "metal-plastic-glass", "scope": "households", "note": "contamination → clarify" }
+        "india": {
+          "tier": 2,
+          "stream": "dry",
+          "scope": "households",
+          "note": "unrinsed container → clarify"
+        },
+        "nyc": {
+          "tier": 2,
+          "stream": "metal-plastic-glass",
+          "scope": "households",
+          "note": "food contamination → clarify"
+        },
+        "england": {
+          "tier": 2,
+          "stream": "metal-plastic-glass",
+          "scope": "households",
+          "note": "contamination → clarify"
+        }
       },
       "composition_role": "ambiguous"
     },
     {
       "id": "B11",
       "label": "takeaway coffee cup half full",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B11.svg", "provenance": "procedural SVG (contaminated variant); see sourcing_manifest" },
-      "perception_attrs": { "object_class": "coffee cup", "material_surface": "paper", "contamination": true, "hazard_flags": [], "confidence": 0.6, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B11.svg",
+        "provenance": "procedural SVG (contaminated variant); see sourcing_manifest",
+        "publicPath": "/benchmark_images/B11.svg"
+      },
+      "perception_attrs": {
+        "object_class": "coffee cup",
+        "material_surface": "paper",
+        "contamination": true,
+        "hazard_flags": [],
+        "confidence": 0.6,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 2, "stream": "dry", "scope": "households", "note": "liquid + paper → clarify" },
-        "nyc": { "tier": 2, "stream": "paper-card", "scope": "households", "note": "liquid cup → clarify" },
-        "england": { "tier": 2, "stream": "metal-plastic-glass", "scope": "households", "note": "takeaway cup w/ liquid → clarify" }
+        "india": {
+          "tier": 2,
+          "stream": "dry",
+          "scope": "households",
+          "note": "liquid + paper → clarify"
+        },
+        "nyc": {
+          "tier": 2,
+          "stream": "paper-card",
+          "scope": "households",
+          "note": "liquid cup → clarify"
+        },
+        "england": {
+          "tier": 2,
+          "stream": "metal-plastic-glass",
+          "scope": "households",
+          "note": "takeaway cup w/ liquid → clarify"
+        }
       },
       "composition_role": "ambiguous"
     },
     {
       "id": "B12",
       "label": "empty latex paint can",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B12.svg", "provenance": "procedural SVG; see sourcing_manifest" },
-      "perception_attrs": { "object_class": "paint can", "material_surface": "metal", "contamination": false, "hazard_flags": ["paint-residue"], "confidence": 0.92, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B12.svg",
+        "provenance": "procedural SVG; see sourcing_manifest",
+        "publicPath": "/benchmark_images/B12.svg"
+      },
+      "perception_attrs": {
+        "object_class": "paint can",
+        "material_surface": "metal",
+        "contamination": false,
+        "hazard_flags": [
+          "paint-residue"
+        ],
+        "confidence": 0.92,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 1, "stream": "special-care", "scope": "households", "note": "paint cans → special-care via authorised agencies (SWM2026-spc-hh)" },
-        "nyc": { "tier": 1, "stream": "metal-plastic-glass", "scope": "households", "note": "empty dry paint cans set out with recycling per DSNY harmful-household-products guidance (NYC2024-recyclables-hh)" },
-        "england": { "tier": 3, "stream": "special-care", "scope": null, "note": "no special-care stream in England corpus" }
+        "india": {
+          "tier": 1,
+          "stream": "special-care",
+          "scope": "households",
+          "note": "paint cans → special-care via authorised agencies (SWM2026-spc-hh)"
+        },
+        "nyc": {
+          "tier": 1,
+          "stream": "metal-plastic-glass",
+          "scope": "households",
+          "note": "empty dry paint cans set out with recycling per DSNY harmful-household-products guidance (NYC2024-recyclables-hh)"
+        },
+        "england": {
+          "tier": 3,
+          "stream": "special-care",
+          "scope": null,
+          "note": "no special-care stream in England corpus"
+        }
       },
       "composition_role": "divergent"
     },
     {
       "id": "B13",
       "label": "garden grass clippings",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B13.svg", "provenance": "procedural SVG; see sourcing_manifest" },
-      "perception_attrs": { "object_class": "grass clippings", "material_surface": "organic", "contamination": false, "hazard_flags": [], "confidence": 0.94, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B13.svg",
+        "provenance": "procedural SVG; see sourcing_manifest",
+        "publicPath": "/benchmark_images/B13.svg"
+      },
+      "perception_attrs": {
+        "object_class": "grass clippings",
+        "material_surface": "organic",
+        "contamination": false,
+        "hazard_flags": [],
+        "confidence": 0.94,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 3, "stream": "garden", "scope": null, "note": "no garden stream in India corpus (SWM 2026 streams: wet/dry/sanitary/special-care)" },
-        "nyc": { "tier": 3, "stream": "garden", "scope": null, "note": "no yard/garden stream row in NYC corpus" },
-        "england": { "tier": 1, "stream": "garden", "scope": "households", "note": "garden waste → ENG2025-garden-hh" }
+        "india": {
+          "tier": 3,
+          "stream": "garden",
+          "scope": null,
+          "note": "no garden stream in India corpus (SWM 2026 streams: wet/dry/sanitary/special-care)"
+        },
+        "nyc": {
+          "tier": 3,
+          "stream": "garden",
+          "scope": null,
+          "note": "no yard/garden stream row in NYC corpus"
+        },
+        "england": {
+          "tier": 1,
+          "stream": "garden",
+          "scope": "households",
+          "note": "garden waste → ENG2025-garden-hh"
+        }
       },
       "composition_role": "divergent"
     },
     {
       "id": "B14",
       "label": "used nappy (diaper)",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B14.svg", "provenance": "procedural SVG; see sourcing_manifest" },
-      "perception_attrs": { "object_class": "diaper", "material_surface": "mixed", "contamination": true, "hazard_flags": ["sanitary"], "confidence": 0.93, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B14.svg",
+        "provenance": "procedural SVG; see sourcing_manifest",
+        "publicPath": "/benchmark_images/B14.svg"
+      },
+      "perception_attrs": {
+        "object_class": "diaper",
+        "material_surface": "mixed",
+        "contamination": true,
+        "hazard_flags": [
+          "sanitary"
+        ],
+        "confidence": 0.93,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 1, "stream": "sanitary", "scope": "households", "note": "used diapers → sanitary stream (SWM2026-san-hh)" },
-        "nyc": { "tier": 1, "stream": "residual", "scope": "households", "note": "diapers are residual/trash (NYC2024-resid-hh)" },
-        "england": { "tier": 1, "stream": "residual", "scope": "households", "note": "disposable nappies → residual (ENG2025-resid-hh)" }
+        "india": {
+          "tier": 1,
+          "stream": "sanitary",
+          "scope": "households",
+          "note": "used diapers → sanitary stream (SWM2026-san-hh)"
+        },
+        "nyc": {
+          "tier": 1,
+          "stream": "residual",
+          "scope": "households",
+          "note": "diapers are residual/trash (NYC2024-resid-hh)"
+        },
+        "england": {
+          "tier": 1,
+          "stream": "residual",
+          "scope": "households",
+          "note": "disposable nappies → residual (ENG2025-resid-hh)"
+        }
       },
       "composition_role": "divergent"
     },
     {
       "id": "B15",
       "label": "glass mirror",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B15.svg", "provenance": "procedural SVG; see sourcing_manifest" },
-      "perception_attrs": { "object_class": "mirror", "material_surface": "glass", "contamination": false, "hazard_flags": ["sharp-edge"], "confidence": 0.72, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B15.svg",
+        "provenance": "procedural SVG; see sourcing_manifest",
+        "publicPath": "/benchmark_images/B15.svg"
+      },
+      "perception_attrs": {
+        "object_class": "mirror",
+        "material_surface": "glass",
+        "contamination": false,
+        "hazard_flags": [
+          "sharp-edge"
+        ],
+        "confidence": 0.72,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 2, "stream": "dry", "scope": "households", "note": "mirror glass vs packaging glass ambiguous → clarify" },
-        "nyc": { "tier": 2, "stream": "metal-plastic-glass", "scope": "households", "note": "mirror not packaging → clarify" },
-        "england": { "tier": 2, "stream": "metal-plastic-glass", "scope": "households", "note": "hazard (sharp) + material ambiguity → clarify" }
+        "india": {
+          "tier": 2,
+          "stream": "dry",
+          "scope": "households",
+          "note": "mirror glass vs packaging glass ambiguous → clarify"
+        },
+        "nyc": {
+          "tier": 2,
+          "stream": "metal-plastic-glass",
+          "scope": "households",
+          "note": "mirror not packaging → clarify"
+        },
+        "england": {
+          "tier": 2,
+          "stream": "metal-plastic-glass",
+          "scope": "households",
+          "note": "hazard (sharp) + material ambiguity → clarify"
+        }
       },
       "composition_role": "ambiguous"
     },
     {
       "id": "B16",
       "label": "broken CFL bulb",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B16.svg", "provenance": "procedural SVG; see sourcing_manifest" },
-      "perception_attrs": { "object_class": "compact fluorescent bulb", "material_surface": "glass", "contamination": false, "hazard_flags": ["mercury", "sharp-edge"], "confidence": 0.9, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B16.svg",
+        "provenance": "procedural SVG; see sourcing_manifest",
+        "publicPath": "/benchmark_images/B16.svg"
+      },
+      "perception_attrs": {
+        "object_class": "compact fluorescent bulb",
+        "material_surface": "glass",
+        "contamination": false,
+        "hazard_flags": [
+          "mercury",
+          "sharp-edge"
+        ],
+        "confidence": 0.9,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 1, "stream": "special-care", "scope": "households", "note": "bulbs → special-care (SWM2026-spc-hh)" },
-        "nyc": { "tier": 3, "stream": "special-care", "scope": null, "note": "no special-care stream row" },
-        "england": { "tier": 3, "stream": "special-care", "scope": null, "note": "no special-care stream row" }
+        "india": {
+          "tier": 1,
+          "stream": "special-care",
+          "scope": "households",
+          "note": "bulbs → special-care (SWM2026-spc-hh)"
+        },
+        "nyc": {
+          "tier": 3,
+          "stream": "special-care",
+          "scope": null,
+          "note": "no special-care stream row"
+        },
+        "england": {
+          "tier": 3,
+          "stream": "special-care",
+          "scope": null,
+          "note": "no special-care stream row"
+        }
       },
       "composition_role": "divergent"
     },
     {
       "id": "B17",
       "label": "concrete and brick construction debris",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B17.svg", "provenance": "procedural SVG; see sourcing_manifest" },
-      "perception_attrs": { "object_class": "construction debris", "material_surface": "concrete", "contamination": false, "hazard_flags": ["heavy"], "confidence": 0.91, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B17.svg",
+        "provenance": "procedural SVG; see sourcing_manifest",
+        "publicPath": "/benchmark_images/B17.svg"
+      },
+      "perception_attrs": {
+        "object_class": "construction debris",
+        "material_surface": "concrete",
+        "contamination": false,
+        "hazard_flags": [
+          "heavy"
+        ],
+        "confidence": 0.91,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 3, "stream": "construction-debris", "scope": null, "note": "no C&D stream in household corpus" },
-        "nyc": { "tier": 3, "stream": "construction-debris", "scope": null, "note": "no C&D stream row" },
-        "england": { "tier": 3, "stream": "construction-debris", "scope": null, "note": "no C&D stream row" }
+        "india": {
+          "tier": 3,
+          "stream": "construction-debris",
+          "scope": null,
+          "note": "no C&D stream in household corpus"
+        },
+        "nyc": {
+          "tier": 3,
+          "stream": "construction-debris",
+          "scope": null,
+          "note": "no C&D stream row"
+        },
+        "england": {
+          "tier": 3,
+          "stream": "construction-debris",
+          "scope": null,
+          "note": "no C&D stream row"
+        }
       },
       "composition_role": "no_match"
     },
     {
       "id": "B18",
       "label": "broken mobile phone (e-waste)",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B18.svg", "provenance": "procedural SVG; see sourcing_manifest" },
-      "perception_attrs": { "object_class": "smartphone", "material_surface": "mixed", "contamination": false, "hazard_flags": ["battery"], "confidence": 0.9, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B18.svg",
+        "provenance": "procedural SVG; see sourcing_manifest",
+        "publicPath": "/benchmark_images/B18.svg"
+      },
+      "perception_attrs": {
+        "object_class": "smartphone",
+        "material_surface": "mixed",
+        "contamination": false,
+        "hazard_flags": [
+          "battery"
+        ],
+        "confidence": 0.9,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 3, "stream": "electronic", "scope": null, "note": "no e-waste stream row in SWM household corpus" },
-        "nyc": { "tier": 3, "stream": "electronic", "scope": null, "note": "no e-waste stream row" },
-        "england": { "tier": 3, "stream": "electronic", "scope": null, "note": "no e-waste stream row" }
+        "india": {
+          "tier": 3,
+          "stream": "electronic",
+          "scope": null,
+          "note": "no e-waste stream row in SWM household corpus"
+        },
+        "nyc": {
+          "tier": 3,
+          "stream": "electronic",
+          "scope": null,
+          "note": "no e-waste stream row"
+        },
+        "england": {
+          "tier": 3,
+          "stream": "electronic",
+          "scope": null,
+          "note": "no e-waste stream row"
+        }
       },
       "composition_role": "no_match"
     },
     {
       "id": "B19",
       "label": "car battery",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B19.svg", "provenance": "procedural SVG; see sourcing_manifest" },
-      "perception_attrs": { "object_class": "car battery", "material_surface": "plastic", "contamination": false, "hazard_flags": ["battery", "corrosive"], "confidence": 0.96, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B19.svg",
+        "provenance": "procedural SVG; see sourcing_manifest",
+        "publicPath": "/benchmark_images/B19.svg"
+      },
+      "perception_attrs": {
+        "object_class": "car battery",
+        "material_surface": "plastic",
+        "contamination": false,
+        "hazard_flags": [
+          "battery",
+          "corrosive"
+        ],
+        "confidence": 0.96,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 3, "stream": "battery", "scope": null, "note": "no battery stream row" },
-        "nyc": { "tier": 3, "stream": "battery", "scope": null, "note": "no battery stream row" },
-        "england": { "tier": 3, "stream": "battery", "scope": null, "note": "no battery stream row" }
+        "india": {
+          "tier": 3,
+          "stream": "battery",
+          "scope": null,
+          "note": "no battery stream row"
+        },
+        "nyc": {
+          "tier": 3,
+          "stream": "battery",
+          "scope": null,
+          "note": "no battery stream row"
+        },
+        "england": {
+          "tier": 3,
+          "stream": "battery",
+          "scope": null,
+          "note": "no battery stream row"
+        }
       },
       "composition_role": "no_match"
     },
     {
       "id": "B20",
       "label": "EPS (styrofoam) clamshell",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B20.svg", "provenance": "procedural SVG; see sourcing_manifest" },
-      "perception_attrs": { "object_class": "styrofoam clamshell", "material_surface": "plastic", "contamination": false, "hazard_flags": [], "confidence": 0.93, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B20.svg",
+        "provenance": "procedural SVG; see sourcing_manifest",
+        "publicPath": "/benchmark_images/B20.svg"
+      },
+      "perception_attrs": {
+        "object_class": "styrofoam clamshell",
+        "material_surface": "plastic",
+        "contamination": false,
+        "hazard_flags": [],
+        "confidence": 0.93,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 1, "stream": "dry", "scope": "households", "note": "polystyrene is plastic → dry stream" },
-        "nyc": { "tier": 1, "stream": "metal-plastic-glass", "scope": "households", "note": "rigid plastic → recyclables" },
-        "england": { "tier": 1, "stream": "metal-plastic-glass", "scope": "households", "note": "plastic → dry recyclable stream" }
+        "india": {
+          "tier": 1,
+          "stream": "dry",
+          "scope": "households",
+          "note": "polystyrene is plastic → dry stream"
+        },
+        "nyc": {
+          "tier": 1,
+          "stream": "metal-plastic-glass",
+          "scope": "households",
+          "note": "rigid plastic → recyclables"
+        },
+        "england": {
+          "tier": 1,
+          "stream": "metal-plastic-glass",
+          "scope": "households",
+          "note": "plastic → dry recyclable stream"
+        }
       },
       "composition_role": "common"
     },
     {
       "id": "B21",
       "label": "metal tin can with paper label, rinsed",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B21.svg", "provenance": "procedural SVG; see sourcing_manifest" },
-      "perception_attrs": { "object_class": "tin can", "material_surface": "metal", "contamination": false, "hazard_flags": [], "confidence": 0.93, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B21.svg",
+        "provenance": "procedural SVG; see sourcing_manifest",
+        "publicPath": "/benchmark_images/B21.svg"
+      },
+      "perception_attrs": {
+        "object_class": "tin can",
+        "material_surface": "metal",
+        "contamination": false,
+        "hazard_flags": [],
+        "confidence": 0.93,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 1, "stream": "dry", "scope": "households", "note": "" },
-        "nyc": { "tier": 1, "stream": "metal-plastic-glass", "scope": "households", "note": "" },
-        "england": { "tier": 1, "stream": "metal-plastic-glass", "scope": "households", "note": "" }
+        "india": {
+          "tier": 1,
+          "stream": "dry",
+          "scope": "households",
+          "note": ""
+        },
+        "nyc": {
+          "tier": 1,
+          "stream": "metal-plastic-glass",
+          "scope": "households",
+          "note": ""
+        },
+        "england": {
+          "tier": 1,
+          "stream": "metal-plastic-glass",
+          "scope": "households",
+          "note": ""
+        }
       },
       "composition_role": "common"
     },
     {
       "id": "B22",
       "label": "soiled paper napkin",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B22.svg", "provenance": "procedural SVG (contaminated variant); see sourcing_manifest" },
-      "perception_attrs": { "object_class": "paper napkin", "material_surface": "paper", "contamination": true, "hazard_flags": [], "confidence": 0.6, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B22.svg",
+        "provenance": "procedural SVG (contaminated variant); see sourcing_manifest",
+        "publicPath": "/benchmark_images/B22.svg"
+      },
+      "perception_attrs": {
+        "object_class": "paper napkin",
+        "material_surface": "paper",
+        "contamination": true,
+        "hazard_flags": [],
+        "confidence": 0.6,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 2, "stream": "dry", "scope": "households", "note": "food-soiled paper → clarify" },
-        "nyc": { "tier": 2, "stream": "paper-card", "scope": "households", "note": "soiled paper → clarify" },
-        "england": { "tier": 2, "stream": "paper-card", "scope": "households", "note": "soiled fibre → clarify" }
+        "india": {
+          "tier": 2,
+          "stream": "dry",
+          "scope": "households",
+          "note": "food-soiled paper → clarify"
+        },
+        "nyc": {
+          "tier": 2,
+          "stream": "paper-card",
+          "scope": "households",
+          "note": "soiled paper → clarify"
+        },
+        "england": {
+          "tier": 2,
+          "stream": "paper-card",
+          "scope": "households",
+          "note": "soiled fibre → clarify"
+        }
       },
       "composition_role": "ambiguous"
     },
     {
       "id": "B23",
       "label": "empty milk carton (tetra pak)",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B23.svg", "provenance": "procedural SVG; see sourcing_manifest" },
-      "perception_attrs": { "object_class": "milk carton", "material_surface": "paper", "contamination": false, "hazard_flags": [], "confidence": 0.94, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B23.svg",
+        "provenance": "procedural SVG; see sourcing_manifest",
+        "publicPath": "/benchmark_images/B23.svg"
+      },
+      "perception_attrs": {
+        "object_class": "milk carton",
+        "material_surface": "paper",
+        "contamination": false,
+        "hazard_flags": [],
+        "confidence": 0.94,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 1, "stream": "dry", "scope": "households", "note": "carton → dry stream" },
-        "nyc": { "tier": 1, "stream": "paper-card", "scope": "households", "note": "cartons with paper-card recyclables" },
-        "england": { "tier": 1, "stream": "metal-plastic-glass", "scope": "households", "note": "cartons explicitly included in dry recyclable stream (ENG2025-dry-hh)" }
+        "india": {
+          "tier": 1,
+          "stream": "dry",
+          "scope": "households",
+          "note": "carton → dry stream"
+        },
+        "nyc": {
+          "tier": 1,
+          "stream": "paper-card",
+          "scope": "households",
+          "note": "cartons with paper-card recyclables"
+        },
+        "england": {
+          "tier": 1,
+          "stream": "metal-plastic-glass",
+          "scope": "households",
+          "note": "cartons explicitly included in dry recyclable stream (ENG2025-dry-hh)"
+        }
       },
       "composition_role": "common"
     },
     {
       "id": "B24",
       "label": "coffee grounds",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B24.svg", "provenance": "procedural SVG; see sourcing_manifest" },
-      "perception_attrs": { "object_class": "coffee grounds", "material_surface": "organic", "contamination": false, "hazard_flags": [], "confidence": 0.97, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B24.svg",
+        "provenance": "procedural SVG; see sourcing_manifest",
+        "publicPath": "/benchmark_images/B24.svg"
+      },
+      "perception_attrs": {
+        "object_class": "coffee grounds",
+        "material_surface": "organic",
+        "contamination": false,
+        "hazard_flags": [],
+        "confidence": 0.97,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 1, "stream": "wet", "scope": "households", "note": "" },
-        "nyc": { "tier": 1, "stream": "food", "scope": "households", "note": "" },
-        "england": { "tier": 1, "stream": "food", "scope": "households", "note": "" }
+        "india": {
+          "tier": 1,
+          "stream": "wet",
+          "scope": "households",
+          "note": ""
+        },
+        "nyc": {
+          "tier": 1,
+          "stream": "food",
+          "scope": "households",
+          "note": ""
+        },
+        "england": {
+          "tier": 1,
+          "stream": "food",
+          "scope": "households",
+          "note": ""
+        }
       },
       "composition_role": "common"
     },
     {
       "id": "B25",
       "label": "empty glass baby-food jar",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B25.svg", "provenance": "procedural SVG; see sourcing_manifest" },
-      "perception_attrs": { "object_class": "baby food jar", "material_surface": "glass", "contamination": false, "hazard_flags": [], "confidence": 0.95, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B25.svg",
+        "provenance": "procedural SVG; see sourcing_manifest",
+        "publicPath": "/benchmark_images/B25.svg"
+      },
+      "perception_attrs": {
+        "object_class": "baby food jar",
+        "material_surface": "glass",
+        "contamination": false,
+        "hazard_flags": [],
+        "confidence": 0.95,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 1, "stream": "dry", "scope": "households", "note": "" },
-        "nyc": { "tier": 1, "stream": "metal-plastic-glass", "scope": "households", "note": "" },
-        "england": { "tier": 1, "stream": "metal-plastic-glass", "scope": "households", "note": "" }
+        "india": {
+          "tier": 1,
+          "stream": "dry",
+          "scope": "households",
+          "note": ""
+        },
+        "nyc": {
+          "tier": 1,
+          "stream": "metal-plastic-glass",
+          "scope": "households",
+          "note": ""
+        },
+        "england": {
+          "tier": 1,
+          "stream": "metal-plastic-glass",
+          "scope": "households",
+          "note": ""
+        }
       },
       "composition_role": "common"
     },
     {
       "id": "B26",
       "label": "mouldy bread loaf",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B26.svg", "provenance": "procedural SVG (contaminated variant); see sourcing_manifest" },
-      "perception_attrs": { "object_class": "bread", "material_surface": "organic", "contamination": true, "hazard_flags": ["mould"], "confidence": 0.95, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B26.svg",
+        "provenance": "procedural SVG (contaminated variant); see sourcing_manifest",
+        "publicPath": "/benchmark_images/B26.svg"
+      },
+      "perception_attrs": {
+        "object_class": "bread",
+        "material_surface": "organic",
+        "contamination": true,
+        "hazard_flags": [
+          "mould"
+        ],
+        "confidence": 0.95,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 1, "stream": "wet", "scope": "households", "note": "food waste → wet stream" },
-        "nyc": { "tier": 1, "stream": "food", "scope": "households", "note": "" },
-        "england": { "tier": 1, "stream": "food", "scope": "households", "note": "" }
+        "india": {
+          "tier": 1,
+          "stream": "wet",
+          "scope": "households",
+          "note": "food waste → wet stream"
+        },
+        "nyc": {
+          "tier": 1,
+          "stream": "food",
+          "scope": "households",
+          "note": ""
+        },
+        "england": {
+          "tier": 1,
+          "stream": "food",
+          "scope": "households",
+          "note": ""
+        }
       },
       "composition_role": "common"
     },
     {
       "id": "B27",
       "label": "half-full wet paint can",
-      "image": { "kind": "synthetic_render", "file": "data/benchmark_images/B27.svg", "provenance": "procedural SVG; see sourcing_manifest" },
-      "perception_attrs": { "object_class": "paint can", "material_surface": "metal", "contamination": false, "hazard_flags": ["paint-residue", "wet-paint"], "confidence": 0.9, "household_context": true },
+      "image": {
+        "kind": "synthetic_render",
+        "file": "data/benchmark_images/B27.svg",
+        "provenance": "procedural SVG; see sourcing_manifest",
+        "publicPath": "/benchmark_images/B27.svg"
+      },
+      "perception_attrs": {
+        "object_class": "paint can",
+        "material_surface": "metal",
+        "contamination": false,
+        "hazard_flags": [
+          "paint-residue",
+          "wet-paint"
+        ],
+        "confidence": 0.9,
+        "household_context": true
+      },
       "ground_truth": {
-        "india": { "tier": 1, "stream": "special-care", "scope": "households", "note": "wet paint → special-care via authorised agencies (SWM2026-spc-hh)" },
-        "nyc": { "tier": 3, "stream": "special-care", "scope": null, "note": "wet/filled paint cans are household hazardous waste, NOT recyclable; empty dry cans are (contrast B12)" },
-        "england": { "tier": 3, "stream": "special-care", "scope": null, "note": "no special-care stream in England corpus" }
+        "india": {
+          "tier": 1,
+          "stream": "special-care",
+          "scope": "households",
+          "note": "wet paint → special-care via authorised agencies (SWM2026-spc-hh)"
+        },
+        "nyc": {
+          "tier": 3,
+          "stream": "special-care",
+          "scope": null,
+          "note": "wet/filled paint cans are household hazardous waste, NOT recyclable; empty dry cans are (contrast B12)"
+        },
+        "england": {
+          "tier": 3,
+          "stream": "special-care",
+          "scope": null,
+          "note": "no special-care stream in England corpus"
+        }
       },
       "composition_role": "divergent"
     }

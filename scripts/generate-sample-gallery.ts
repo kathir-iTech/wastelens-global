@@ -60,7 +60,7 @@ async function main(): Promise<number> {
       label: item.label,
       jurisdiction: def.jurisdiction,
       note: def.note,
-      image: item.image.file,
+      image: item.image.publicPath,
       verdict: {
         tier: verdict.tier,
         stream: verdict.stream,

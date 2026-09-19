@@ -11,7 +11,7 @@ export interface GroundTruth {
 export interface BenchItem {
   id: string;
   label: string;
-  image: { kind: string; file: string; provenance: string };
+  image: { kind: string; file: string; provenance: string; publicPath: string };
   perception_attrs: {
     object_class: string;
     material_surface: string;
