@@ -78,9 +78,18 @@ export default function Home() {
   const [perceiving, setPerceiving] = useState(false);
   const [perceptionNote, setPerceptionNote] = useState<string | null>(null);
   const [scanStage, setScanStage] = useState<"idle" | "identifying" | "checking">("idle");
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [advancedOpen, setAdvancedOpen] = useState(false);
+  const [perceptionCount, setPerceptionCount] = useState(0);
 
   const sample = SAMPLES.find((s) => s.id === sampleId) ?? SAMPLES[0];
   const shownImage = uploadDataUrl ?? sample.publicPath;
+
+  function handleGallerySelect(itemId: string, _imagePath: string) {
+    setSampleId(itemId);
+    setUploadDataUrl(null);
+    setGalleryOpen(false);
+  }
 
   const fetchCount = useRef(0);
   const [fetchCountShown, setFetchCountShown] = useState(0);
@@ -97,6 +106,7 @@ export default function Home() {
   }, []);
 
   async function runPerception() {
+    setPerceptionCount((c) => c + 1);
     setPerceiving(true);
     setPerceptionNote(null);
     setScanStage("identifying");
@@ -234,103 +244,146 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          <section className="rounded-sm border border-hairline bg-card p-5">
-            <h2 className="text-base font-semibold text-ink">
-              {mode === "A" ? "Mode A — perception" : "Mode B — local rules → matrix"}
-            </h2>
+        {mode === "A" && (
+          <section className="mb-6 rounded-sm border border-hairline bg-card p-5">
+            <h2 className="text-base font-semibold text-ink">Mode A — perception</h2>
 
-            {mode === "A" ? (
-              <div className="mt-4 space-y-4">
-                <div className="flex flex-wrap gap-2">
-                  {SAMPLES.map((s) => (
-                    <button
-                      key={s.id}
-                      type="button"
-                      onClick={() => {
-                        setSampleId(s.id);
-                        setUploadDataUrl(null);
-                      }}
-                      className={
-                        sampleId === s.id && !uploadDataUrl
-                          ? "rounded-sm bg-ink px-3 py-1 text-xs font-medium text-paper"
-                          : "rounded-sm border border-hairline bg-card px-3 py-1 text-xs font-medium text-muted hover:border-accent hover:text-ink"
-                      }
-                    >
-                      {s.label}
-                    </button>
-                  ))}
-                </div>
-
-                <input type="file" accept="image/*" onChange={onFile} className="block w-full text-xs text-muted" />
-
-                <div className="border border-hairline rounded-sm bg-paper p-3">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={shownImage}
-                    alt="image to perceive"
-                    width={640}
-                    height={480}
-                    className="aspect-video w-full rounded-sm border border-hairline object-cover"
-                  />
-                </div>
-
-                <button
-                  type="button"
-                  onClick={runPerception}
-                  disabled={perceiving}
-                  className="rounded-sm bg-ink px-4 py-2 text-sm font-semibold text-paper hover:opacity-90 disabled:opacity-50"
-                >
-                  {perceiving ? "Scanning…" : "Run perception"}
-                </button>
-
-                {scanStage !== "idle" && (
-                  <p className="animate-pulse text-xs font-medium text-ink" role="status">
-                    {scanStage === "identifying"
-                      ? "Identifying item…"
-                      : `Checking ${JURISDICTION_LABELS[activeJuris]} law…`}
-                  </p>
-                )}
-
-                <div className="text-xs text-muted">
-                  Perception invocations this session:{" "}
-                  <span className="font-mono font-semibold">{ctlState.perceiveInvocations}</span>
-                  {ctlState.perceiveInvocations > 0 && (
-                    <span> — cached across jurisdiction switch</span>
-                  )}
-                </div>
-
-                {ctlState.perception?.output && (
-                  <div className="flex flex-wrap gap-2 text-xs">
-                    <span className="rounded-sm border border-hairline bg-paper px-2 py-1 text-ink">
-                      {ctlState.perception.output.object_class}
-                    </span>
-                    <span className="rounded-sm border border-hairline bg-paper px-2 py-1 text-ink">
-                      {ctlState.perception.output.material_surface}
-                    </span>
-                    <span className="rounded-sm border border-hairline bg-paper px-2 py-1 text-ink">
-                      contaminated: {ctlState.perception.output.contamination ? "yes" : "no"}
-                    </span>
-                    {ctlState.perception.output.hazard_flags.map((h) => (
-                      <span key={h} className="rounded-sm border border-tier3 bg-paper px-2 py-1 text-tier3">
-                        {h}
-                      </span>
-                    ))}
-                    <span className="rounded-sm border border-hairline bg-paper px-2 py-1 text-ink">
-                      confidence {(ctlState.perception.output.confidence * 100).toFixed(0)}%
-                    </span>
-                    <span className="rounded-sm border border-hairline bg-paper px-2 py-1 font-mono text-muted">
-                      {ctlState.perception.model_id ?? "no model"}
-                    </span>
-                  </div>
-                )}
-                {perceptionNote && (
-                  <p className="rounded-sm border border-tier3 border-l-2 bg-paper px-3 py-2 text-sm text-tier3">
-                    {perceptionNote}
-                  </p>
+            <div className="mt-4 space-y-4">
+              <div className="flex flex-wrap items-center gap-3">
+                <label className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-sm bg-accent px-5 py-3 text-sm font-semibold text-paper hover:opacity-90">
+                  📷 Take a photo
+                  <input type="file" accept="image/*" capture="environment" onChange={onFile} className="sr-only" />
+                </label>
+                {uploadDataUrl === null && (
+                  <span className="text-xs text-muted">
+                    or pick one of the {SAMPLES.length} bundled samples below.
+                  </span>
                 )}
               </div>
-            ) : (
+
+              <div className="flex flex-wrap gap-2">
+                {SAMPLES.map((s) => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => {
+                      setSampleId(s.id);
+                      setUploadDataUrl(null);
+                    }}
+                    className={
+                      sampleId === s.id && !uploadDataUrl
+                        ? "rounded-sm bg-ink px-3 py-1 text-xs font-medium text-paper"
+                        : "rounded-sm border border-hairline bg-card px-3 py-1 text-xs font-medium text-muted hover:border-accent hover:text-ink"
+                    }
+                  >
+                    {s.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="border border-hairline rounded-sm bg-paper p-3">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={shownImage}
+                  alt="image to perceive"
+                  width={640}
+                  height={480}
+                  className="aspect-video w-full rounded-sm border border-hairline object-cover"
+                />
+              </div>
+
+              <button
+                type="button"
+                onClick={runPerception}
+                disabled={perceiving}
+                className="rounded-sm bg-ink px-5 py-2.5 text-sm font-semibold text-paper hover:opacity-90 disabled:opacity-50"
+              >
+                {perceiving ? "Scanning…" : "Run perception"}
+              </button>
+
+              {scanStage !== "idle" && (
+                <p className="animate-pulse text-xs font-medium text-ink" role="status">
+                  {scanStage === "identifying"
+                    ? "Identifying item…"
+                    : `Checking ${JURISDICTION_LABELS[activeJuris]} law…`}
+                </p>
+              )}
+
+              <div className="text-xs text-muted">
+                Perception invocations this session:{" "}
+                <span className="font-mono font-semibold">{perceptionCount}</span>
+                {perceptionCount > 0 && (
+                  <span> — cached across jurisdiction switch</span>
+                )}
+              </div>
+
+              {ctlState.perception?.output && (
+                <div className="flex flex-wrap gap-2 text-xs">
+                  <span className="rounded-sm border border-hairline bg-paper px-2 py-1 text-ink">
+                    {ctlState.perception.output.object_class}
+                  </span>
+                  <span className="rounded-sm border border-hairline bg-paper px-2 py-1 text-ink">
+                    {ctlState.perception.output.material_surface}
+                  </span>
+                  <span className="rounded-sm border border-hairline bg-paper px-2 py-1 text-ink">
+                    contaminated: {ctlState.perception.output.contamination ? "yes" : "no"}
+                  </span>
+                  {ctlState.perception.output.hazard_flags.map((h) => (
+                    <span key={h} className="rounded-sm border border-tier3 bg-paper px-2 py-1 text-tier3">
+                      {h}
+                    </span>
+                  ))}
+                  <span className="rounded-sm border border-hairline bg-paper px-2 py-1 text-ink">
+                    confidence {(ctlState.perception.output.confidence * 100).toFixed(0)}%
+                  </span>
+                  <span className="rounded-sm border border-hairline bg-paper px-2 py-1 font-mono text-muted">
+                    {ctlState.perception.model_id ?? "no model"}
+                  </span>
+                </div>
+              )}
+              {perceptionNote && (
+                <p className="rounded-sm border border-tier3 border-l-2 bg-paper px-3 py-2 text-sm text-tier3">
+                  {perceptionNote}
+                </p>
+              )}
+
+              <div className="mt-4 border-t border-hairline pt-3">
+                {!galleryOpen ? (
+                  <button
+                    type="button"
+                    onClick={() => setGalleryOpen(true)}
+                    className="text-sm text-accent underline decoration-accent/40 underline-offset-2 hover:decoration-accent"
+                  >
+                    No camera? See an example instead
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setGalleryOpen(false)}
+                      className="text-xs text-muted hover:text-ink"
+                    >
+                      Hide examples
+                    </button>
+                    <SampleGallery onSelect={handleGallerySelect} />
+                  </>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {mode === "B" && (
+          <section className="mb-6 rounded-sm border border-hairline bg-card p-5">
+            <h2 className="text-base font-semibold text-ink">Mode B — local rules → matrix</h2>
+            <button
+              type="button"
+              onClick={() => setAdvancedOpen(!advancedOpen)}
+              className="mt-2 text-sm text-accent underline decoration-accent/40 underline-offset-2 hover:decoration-accent"
+            >
+              {advancedOpen ? "Collapse advanced / offline mode" : "advanced / offline mode"}
+            </button>
+            {advancedOpen && (
               <div className="mt-4 space-y-3">
                 <p className="text-xs text-muted">
                   No photograph required. Known attributes are resolved against the bundled
@@ -394,8 +447,10 @@ export default function Home() {
               </div>
             )}
           </section>
+        )}
 
-          <section className="rounded-sm border border-hairline bg-card p-5">
+        {ctlState.perception?.output && (
+          <section className="mb-6 rounded-sm border border-hairline bg-card p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h2 className="text-base font-semibold text-ink">Docket</h2>
               <JurisdictionToggle value={activeJuris} onChange={onToggle} />
@@ -431,9 +486,7 @@ export default function Home() {
               ))}
             </div>
           </section>
-        </div>
-
-        <SampleGallery />
+        )}
       </div>
     </main>
   );

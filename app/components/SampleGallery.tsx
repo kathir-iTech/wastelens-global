@@ -35,7 +35,7 @@ const CASE_LABEL: Record<string, string> = {
   england: "England",
 };
 
-export function SampleGallery() {
+export function SampleGallery({ onSelect }: { onSelect?: (itemId: string, imagePath: string) => void }) {
   const cases = (gallery as { cases: GalleryCase[] }).cases;
 
   return (
@@ -55,8 +55,10 @@ export function SampleGallery() {
               key={c.case_id}
               className={cn(
                 "flex flex-col overflow-hidden rounded-sm border border-hairline border-l-4 bg-card",
-                TIER_BAR[tier]
+                TIER_BAR[tier],
+                onSelect ? "cursor-pointer hover:opacity-90" : ""
               )}
+              onClick={() => onSelect?.(c.item_id, c.image)}
             >
               <div className="border-b border-hairline p-3">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
