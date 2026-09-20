@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { Camera, ScanLine } from "lucide-react";
+import { ScanLine, Upload } from "lucide-react";
 import { JURISDICTIONS, Jurisdiction, streamsFor } from "@/lib/corpus";
 import {
   createVerdictController,
@@ -383,9 +383,9 @@ export default function Home() {
             <div className="mt-4 space-y-4">
               <div className="flex flex-wrap items-center gap-3">
                 <label className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-tier1 px-6 py-3 text-sm font-bold text-paper shadow-[0_4px_16px_rgba(127,209,160,0.25)] transition-opacity hover:opacity-90">
-                  <Camera className="h-5 w-5" aria-hidden="true" />
-                  Take a photo
-                  <input type="file" accept="image/*" capture="environment" onChange={onFile} className="sr-only" />
+                  <Upload className="h-5 w-5" aria-hidden="true" />
+                  Upload
+                  <input type="file" accept="image/*" onChange={onFile} className="sr-only" />
                 </label>
                 <button
                   type="button"

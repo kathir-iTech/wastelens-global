@@ -97,8 +97,22 @@ export default function LiveScan({
           import("@tensorflow/tfjs"),
           import("@tensorflow-models/coco-ssd"),
         ]);
+        let backend: string;
+        try {
+          await tf.setBackend("webgl");
+          backend = "webgl";
+        } catch {
+          await import("@tensorflow/tfjs-backend-wasm").catch(() => undefined);
+          try {
+            await tf.setBackend("wasm");
+            backend = "wasm";
+          } catch {
+            backend = tf.getBackend();
+          }
+        }
         await tf.ready();
-        const model = await coco.load();
+        console.log(`[LiveScan] tfjs backend: ${backend} (${tf.getBackend()})`);
+        const model = await coco.load({ base: "lite_mobilenet_v2" });
         if (cancelled) {
           model.dispose?.();
           return;
@@ -129,17 +143,34 @@ export default function LiveScan({
     const canvasEl = boxRef.current;
     if (!video || !model || !canvasEl) return;
 
+    const DETECT_SCALE = 320;
+    const detectCanvas = document.createElement("canvas");
+    detectCanvas.style.display = "none";
+    const ticks = { count: 0, since: performance.now(), logged: false };
+
     const detectOnce = async () => {
       if (video.videoWidth === 0) return;
       try {
-        const raw = await model.detect(video, 10, 0.5);
+        const vw = video.videoWidth;
+        const vh = video.videoHeight;
+        const dh = Math.max(1, Math.round((DETECT_SCALE * vh) / vw));
+        if (detectCanvas.width !== DETECT_SCALE || detectCanvas.height !== dh) {
+          detectCanvas.width = DETECT_SCALE;
+          detectCanvas.height = dh;
+        }
+        const dctx = detectCanvas.getContext("2d");
+        if (!dctx) return;
+        dctx.drawImage(video, 0, 0, DETECT_SCALE, dh);
+        const raw = await model.detect(detectCanvas, 10, 0.5);
+        const sx = vw / DETECT_SCALE;
+        const sy = vh / dh;
         const ds: Detection[] = raw
           .filter((d) => d.score >= 0.5)
           .map((d) => ({
-            x: d.bbox[0],
-            y: d.bbox[1],
-            w: d.bbox[2],
-            h: d.bbox[3],
+            x: d.bbox[0] * sx,
+            y: d.bbox[1] * sy,
+            w: d.bbox[2] * sx,
+            h: d.bbox[3] * sy,
             label: d.class,
             score: d.score,
           }));
@@ -178,6 +209,13 @@ export default function LiveScan({
 
     const tick = () => {
       void detectOnce();
+      ticks.count++;
+      if (ticks.count === 10 && !ticks.logged) {
+        const now = performance.now();
+        const rate = (ticks.count * 1000) / (now - ticks.since);
+        console.log(`[LiveScan] detect rate: ${rate.toFixed(1)}/s (interval 200ms)`);
+        ticks.logged = true;
+      }
       loopTimer.current = window.setTimeout(tick, 200);
     };
     tick();
@@ -188,15 +226,28 @@ export default function LiveScan({
     };
   }, [status]);
 
-  function capture() {
+  function capture(region?: Detection) {
     const video = videoRef.current;
     if (!video || video.videoWidth === 0) return;
+    const vw = video.videoWidth;
+    const vh = video.videoHeight;
     const cv = document.createElement("canvas");
-    cv.width = video.videoWidth;
-    cv.height = video.videoHeight;
     const c = cv.getContext("2d");
     if (!c) return;
-    c.drawImage(video, 0, 0);
+    if (region) {
+      const pad = 0.1;
+      const x = Math.max(0, region.x - region.w * pad);
+      const y = Math.max(0, region.y - region.h * pad);
+      const w = Math.min(vw - x, region.w * (1 + 2 * pad));
+      const h = Math.min(vh - y, region.h * (1 + 2 * pad));
+      cv.width = Math.max(1, Math.round(w));
+      cv.height = Math.max(1, Math.round(h));
+      c.drawImage(video, x, y, w, h, 0, 0, w, h);
+    } else {
+      cv.width = vw;
+      cv.height = vh;
+      c.drawImage(video, 0, 0);
+    }
     onCapture(cv.toDataURL("image/jpeg", 0.92));
   }
 
@@ -207,10 +258,14 @@ export default function LiveScan({
     const rect = wrap.getBoundingClientRect();
     const px = ((e.clientX - rect.left) / rect.width) * video.videoWidth;
     const py = ((e.clientY - rect.top) / rect.height) * video.videoHeight;
-    const hit = detectionsRef.current.some(
+    const ds = detectionsRef.current;
+    const hit = ds.find(
       (d) => px >= d.x && px <= d.x + d.w && py >= d.y && py <= d.y + d.h
     );
-    if (hit) {
+    if (hit && ds.length > 1) {
+      navigator.vibrate?.(30);
+      capture(hit);
+    } else if (ds.length <= 1) {
       navigator.vibrate?.(30);
       capture();
     }
@@ -225,7 +280,7 @@ export default function LiveScan({
     return (
       <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-xs text-muted">
         Live Scan could not start ({failure === "camera_unavailable" ? "camera unavailable or denied" : "vision model failed to load"}). No problem — use{" "}
-        <span className="font-medium text-ink">Take a photo</span> above instead.
+        <span className="font-medium text-ink">Upload</span> above instead.
         <button
           type="button"
           onClick={onClose}
@@ -297,9 +352,11 @@ export default function LiveScan({
       <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3">
         <p className="text-xs text-muted">
           {status === "running"
-            ? detections.length > 0
-              ? `${detections.length} object${detections.length === 1 ? "" : "s"} detected — tap one to capture`
-              : "Frame the item, then tap Capture. Labels are generic hints."
+            ? detections.length > 1
+              ? `${detections.length} objects detected — tap a box to capture that item`
+              : detections.length === 1
+                ? "1 object detected — tap to capture"
+                : "Frame the item, then tap Capture. Labels are generic hints."
             : "…"}
         </p>
         {status === "running" && (
