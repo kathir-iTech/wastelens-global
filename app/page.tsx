@@ -627,7 +627,7 @@ export default function Home() {
                         <VerdictCard verdict={v} jurisdiction={JURISDICTION_LABELS[j]} />
                         {mode === "A" && v && v.tier === 2 && (
                           <div className="mt-3">
-                            <Tier2Flow verdict={v} jurisdiction={j} onAnswer={onClarify} />
+                            <Tier2Flow verdict={v} jurisdiction={j} onAnswer={onClarify} imageSrc={shownImage} />
                           </div>
                         )}
                       </>
