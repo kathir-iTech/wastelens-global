@@ -18,23 +18,25 @@
     "gen-images": "tsx scripts/generate-benchmark-images.ts"
   },
   "dependencies": {
+    "@tensorflow-models/coco-ssd": "^2.2.3",
+    "@tensorflow/tfjs": "^4.22.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.38.0",
     "next": "15.3.9",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "clsx": "^2.1.1",
-    "tailwind-merge": "^3.6.0",
-    "lucide-react": "^1.38.0"
+    "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
-    "typescript": "^5.7.0",
+    "@tailwindcss/postcss": "^4.3.0",
     "@types/node": "^22.0.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
-    "tailwindcss": "^4.3.0",
-    "@tailwindcss/postcss": "^4.3.0",
-    "postcss": "^8.5.0",
-    "tsx": "^4.19.0",
     "eslint": "^9.0.0",
-    "eslint-config-next": "15.3.9"
+    "eslint-config-next": "15.3.9",
+    "postcss": "^8.5.0",
+    "tailwindcss": "^4.3.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
   }
 }

@@ -1,3 +1,4 @@
+import { ChevronDown } from "lucide-react";
 import { Verdict } from "@/lib/matrix";
 import { TierBadge, TierExplanation, Tier } from "./TierBadge";
 import { cn } from "@/lib/cn";
@@ -44,58 +45,70 @@ export function VerdictCard({
       <h3 className="mt-3 text-2xl font-bold tracking-tight text-ink">
         {verdict.stream ?? "Unknown stream"}
       </h3>
-      {verdict.clause_id && (
-        <p className="mt-1 break-words font-mono text-sm text-muted">{verdict.clause_id}</p>
-      )}
 
       <TierExplanation tier={tier} />
 
-      <div className="mt-3 space-y-2 text-sm leading-relaxed text-ink">
-        {verdict.rule_text && <p>{verdict.rule_text}</p>}
-        {verdict.question && (
-          <p className="border-l-2 border-tier2 pl-3 text-tier2">{verdict.question}</p>
-        )}
-        {verdict.guidance && (
-          <p className="border-l-2 border-tier3 pl-3 text-tier3">{verdict.guidance}</p>
-        )}
-      </div>
+      <details className="group mt-4 rounded-xl border border-white/10 bg-paper/30">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-2.5 text-xs font-semibold text-ink transition-opacity hover:opacity-80 [&::-webkit-details-marker]:hidden">
+          View legal basis
+          <ChevronDown
+            className="h-4 w-4 text-muted transition-transform group-open:rotate-180"
+            aria-hidden="true"
+          />
+        </summary>
+        <div className="space-y-3 border-t border-white/10 px-3 pb-3 pt-2.5 text-sm leading-relaxed text-ink">
+          {verdict.clause_id && (
+            <p className="break-words font-mono text-sm text-muted">{verdict.clause_id}</p>
+          )}
 
-      <dl className="mt-4 space-y-3 border-t border-hairline pt-3">
-        {verdict.source_url && (
-          <div>
-            <dt className="text-xs text-muted">Source</dt>
-            <dd className="mt-0.5">
-              <a
-                href={verdict.source_url}
-                target="_blank"
-                rel="noreferrer"
-                className="break-all font-mono text-sm text-ink underline decoration-hairline underline-offset-2 hover:decoration-accent"
-              >
-                {verdict.source_url}
-              </a>
-            </dd>
-          </div>
-        )}
-        <div>
-          <dt className="text-xs text-muted">Effective date</dt>
-          <dd className="mt-0.5 font-mono text-sm text-ink">{verdict.effective_date ?? "—"}</dd>
-        </div>
-        <div>
-          <dt className="text-xs text-muted">Fine</dt>
-          <dd className="mt-0.5 text-ink">{fine}</dd>
-        </div>
-        {verdict.exemptions && verdict.exemptions.length > 0 && (
-          <div>
-            <dt className="text-xs text-muted">Exemptions</dt>
-            {verdict.exemptions.map((ex, i) => (
-              <dd key={i} className="mt-0.5 text-ink">
-                {ex.condition ?? ex.note ?? ""}
-                {ex.applies_until ? ` (until ${ex.applies_until})` : ""}
+          {verdict.rule_text && <p>{verdict.rule_text}</p>}
+          {verdict.question && (
+            <p className="border-l-2 border-tier2 pl-3 text-tier2">{verdict.question}</p>
+          )}
+          {verdict.guidance && (
+            <p className="border-l-2 border-tier3 pl-3 text-tier3">{verdict.guidance}</p>
+          )}
+
+          <dl className="space-y-2.5 border-t border-hairline pt-2.5">
+            {verdict.source_url && (
+              <div>
+                <dt className="text-xs text-muted">Source</dt>
+                <dd className="mt-0.5">
+                  <a
+                    href={verdict.source_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="break-all font-mono text-sm text-ink underline decoration-hairline underline-offset-2 hover:decoration-accent"
+                  >
+                    {verdict.source_url}
+                  </a>
+                </dd>
+              </div>
+            )}
+            <div>
+              <dt className="text-xs text-muted">Effective date</dt>
+              <dd className="mt-0.5 font-mono text-sm text-ink">
+                {verdict.effective_date ?? "—"}
               </dd>
-            ))}
-          </div>
-        )}
-      </dl>
+            </div>
+            <div>
+              <dt className="text-xs text-muted">Fine</dt>
+              <dd className="mt-0.5 text-ink">{fine}</dd>
+            </div>
+            {verdict.exemptions && verdict.exemptions.length > 0 && (
+              <div>
+                <dt className="text-xs text-muted">Exemptions</dt>
+                {verdict.exemptions.map((ex, i) => (
+                  <dd key={i} className="mt-0.5 text-ink">
+                    {ex.condition ?? ex.note ?? ""}
+                    {ex.applies_until ? ` (until ${ex.applies_until})` : ""}
+                  </dd>
+                ))}
+              </div>
+            )}
+          </dl>
+        </div>
+      </details>
     </article>
   );
 }

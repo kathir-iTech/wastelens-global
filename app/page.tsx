@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Camera } from "lucide-react";
+import dynamic from "next/dynamic";
+import { Camera, ScanLine } from "lucide-react";
 import { JURISDICTIONS, Jurisdiction, streamsFor } from "@/lib/corpus";
 import {
   createVerdictController,
@@ -16,6 +17,13 @@ import { Tier2Flow } from "@/app/components/Tier2Flow";
 import { SampleGallery } from "@/app/components/SampleGallery";
 import { PerceptionCard } from "@/app/components/PerceptionCard";
 import galleryData from "@/data/sample_gallery.json";
+
+const LiveScan = dynamic(() => import("@/app/components/LiveScan"), {
+  ssr: false,
+  loading: () => (
+    <p className="mt-4 animate-pulse text-xs text-muted">Loading live scan…</p>
+  ),
+});
 
 interface GalleryVerdict {
   tier: number;
@@ -96,6 +104,27 @@ interface PerceptionOutcomeLike {
   error?: string;
 }
 
+function geoDefaultJurisdiction(c: { latitude: number; longitude: number }): Jurisdiction {
+  const centers: Record<Jurisdiction, [number, number]> = {
+    india: [20.59, 78.96],
+    nyc: [40.71, -74.01],
+    england: [52.36, -1.17],
+  };
+  let best: Jurisdiction = "india";
+  let bestD = Infinity;
+  for (const j of JURISDICTIONS) {
+    const [lat0, lon0] = centers[j];
+    const dlat = c.latitude - lat0;
+    const dlon = (c.longitude - lon0) * Math.cos((lat0 * Math.PI) / 180);
+    const d = dlat * dlat + dlon * dlon;
+    if (d < bestD) {
+      bestD = d;
+      best = j;
+    }
+  }
+  return best;
+}
+
 export default function Home() {
   const [activeJuris, setActiveJuris] = useState<Jurisdiction>("india");
   const [mode, setMode] = useState<"A" | "B">("A");
@@ -127,6 +156,7 @@ export default function Home() {
 
   const [sampleId, setSampleId] = useState<string>(SAMPLES[0].id);
   const [uploadDataUrl, setUploadDataUrl] = useState<string | null>(null);
+  const [liveScanOpen, setLiveScanOpen] = useState(false);
   const [perceiving, setPerceiving] = useState(false);
   const [perceptionNote, setPerceptionNote] = useState<string | null>(null);
   const [scanStage, setScanStage] = useState<"idle" | "identifying" | "checking">("idle");
@@ -136,6 +166,31 @@ export default function Home() {
     const t = setInterval(() => setScanElapsed((s) => s + 1), 1000);
     return () => clearInterval(t);
   }, [scanStage]);
+  const geoInitRef = useRef({ mode, scope, activeJuris });
+  useEffect(() => {
+    const nav = navigator as Navigator & { geolocation?: Geolocation };
+    if (!nav.geolocation?.getCurrentPosition) return;
+    const initial = geoInitRef.current;
+    let cancelled = false;
+    nav.geolocation.getCurrentPosition(
+      (pos) => {
+        if (cancelled) return;
+        const j = geoDefaultJurisdiction(pos.coords);
+        if (j === initial.activeJuris) return;
+        setActiveJuris(j);
+        setVersion((v) => v + 1);
+        const controller = ctlRef.current;
+        if (controller && initial.mode === "A") {
+          void controller.selectJurisdiction(j, initial.scope);
+        }
+      },
+      () => {},
+      { timeout: 8000, maximumAge: 300000 }
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, []);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const [perceptionCount, setPerceptionCount] = useState(0);
@@ -151,7 +206,7 @@ export default function Home() {
     setGalleryOpen(false);
   }
 
-  async function runPerception() {
+  async function runPerception(refOverride?: string) {
     setPerceptionCount((c) => c + 1);
     setPerceiving(true);
     setPerceptionNote(null);
@@ -161,14 +216,15 @@ export default function Home() {
     setScanElapsed(0);
     const stageTimer = setTimeout(() => setScanStage("checking"), 800);
     try {
-      const ref = uploadDataUrl ?? (await toDataUri(sample.publicPath));
+      const fromSample = refOverride === undefined && uploadDataUrl === null;
+      const ref = refOverride ?? uploadDataUrl ?? (await toDataUri(sample.publicPath));
       await ctl.perceiveImage(ref);
       for (const juris of JURISDICTIONS) {
         await ctl.selectJurisdiction(juris, scope);
       }
       setVersion((v) => v + 1);
       const st = ctl.getState();
-      if (st.perception?.output === null) {
+      if (st.perception?.output === null && fromSample) {
         const cached = cachedVerdictsFor(sampleId);
         if (cached) {
           setCachedVerdicts(cached);
@@ -234,6 +290,12 @@ export default function Home() {
     const reader = new FileReader();
     reader.onload = () => setUploadDataUrl(String(reader.result));
     reader.readAsDataURL(file);
+  }
+
+  function handleLiveCapture(dataUrl: string) {
+    setUploadDataUrl(dataUrl);
+    setLiveScanOpen(false);
+    void runPerception(dataUrl);
   }
 
   // Mode B state
@@ -325,6 +387,14 @@ export default function Home() {
                   Take a photo
                   <input type="file" accept="image/*" capture="environment" onChange={onFile} className="sr-only" />
                 </label>
+                <button
+                  type="button"
+                  onClick={() => setLiveScanOpen((o) => !o)}
+                  className="inline-flex items-center gap-2 rounded-xl border border-tier1/40 px-5 py-3 text-sm font-bold text-tier1 transition-colors hover:bg-tier1/10"
+                >
+                  <ScanLine className="h-5 w-5" aria-hidden="true" />
+                  Live Scan (beta)
+                </button>
                 {uploadDataUrl === null && (
                   <span className="text-xs text-muted">
                     or pick one of the {SAMPLES.length} bundled samples below.
@@ -352,6 +422,13 @@ export default function Home() {
                 ))}
               </div>
 
+              {liveScanOpen && (
+                <LiveScan
+                  onCapture={handleLiveCapture}
+                  onClose={() => setLiveScanOpen(false)}
+                />
+              )}
+
               <div className="rounded-xl border border-white/10 bg-paper/40 p-3">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -365,7 +442,7 @@ export default function Home() {
 
               <button
                 type="button"
-                onClick={runPerception}
+                onClick={() => void runPerception()}
                 disabled={perceiving}
                 className="rounded-xl bg-ink px-5 py-2.5 text-sm font-semibold text-paper hover:opacity-90 disabled:opacity-50"
               >
