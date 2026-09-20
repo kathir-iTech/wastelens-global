@@ -83,7 +83,7 @@ export function SampleGallery({ onSelect }: { onSelect?: (itemId: string, imageP
               <div className="border-b border-white/10 p-3">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={`/${c.image.replaceAll("\\", "/")}`}
+                  src={`/${c.image.replaceAll("\\", "/").replace(/^\/+/, "")}`}
                   alt={`${c.label} (${c.item_id})`}
                   width={640}
                   height={480}
