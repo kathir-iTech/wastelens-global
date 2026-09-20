@@ -248,15 +248,20 @@ export default function Home() {
     england: null,
   });
 
+  function goToDocket(j: Jurisdiction) {
+    setActiveJuris(j);
+    docketRefs.current[j]?.scrollIntoView({
+      behavior: "smooth",
+      inline: "center",
+      block: "nearest",
+    });
+  }
+
   async function onToggle(next: Jurisdiction) {
     setActiveJuris(next);
     setVersion((v) => v + 1);
     if (mode === "A") {
-      docketRefs.current[next]?.scrollIntoView({
-        behavior: "smooth",
-        inline: "center",
-        block: "nearest",
-      });
+      goToDocket(next);
       await ctl.selectJurisdiction(next, scope);
     }
   }
@@ -358,6 +363,28 @@ export default function Home() {
           <p className="mt-3 text-xl text-muted md:text-2xl">The law decides.</p>
           <p className="mt-4 text-lg text-muted">Photograph waste, get the statute.</p>
         </header>
+
+        <section className="mb-4 rounded-2xl border border-tier1/40 bg-tier1/[0.06] p-5 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-xl">
+          <h2 className="text-sm font-bold uppercase tracking-wide text-tier1">
+            Why not just ask ChatGPT (or Gemini)?
+          </h2>
+          <p className="mt-3 text-sm leading-relaxed text-muted">
+            Because a chat model gives you its best guess from training-data pattern-matching —
+            which can be a decade stale. WasteLens Global instead looks up{" "}
+            <span className="font-medium text-ink">current, verified law</span>: India SWM Rules
+            2026, NYC Local Law 19 / §16-324, England SI 2025/140 — each cited to the primary
+            source, not recalled from memory. The same photo gives the{" "}
+            <span className="font-medium text-ink">same answer every time</span> (it is a lookup,
+            not a fresh guess); where there is <span className="font-medium text-ink">no verified
+            match it says so and asks you</span> instead of inventing a confident answer; and it
+            rules the <span className="font-medium text-ink">same object under three real
+            jurisdictions at once</span> — the one thing a single chat answer can never do on its
+            own.
+          </p>
+          <p className="mt-3 text-sm font-semibold text-ink">
+            The law decides, not the model&apos;s guess.
+          </p>
+        </section>
 
         <div className="mb-4 inline-flex flex-wrap gap-1 rounded-2xl border border-white/10 bg-white/[0.04] p-1 shadow-[0_4px_18px_rgba(0,0,0,0.25)] backdrop-blur-xl">
           {(["A", "B"] as const).map((m) => (
@@ -611,14 +638,14 @@ export default function Home() {
               </p>
             )}
 
-            <div className="docket-scroll -mx-5 mt-4 flex snap-x gap-3 overflow-x-auto px-5 pb-1" onScroll={onDocketScroll}>
+            <div className="docket-scroll -mx-5 mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-1" onScroll={onDocketScroll}>
               {docketJuris.map((j) => (
                 <div
                   key={j}
                   ref={(el) => {
                     docketRefs.current[j] = el;
                   }}
-                  className="docket-ruling w-[86%] shrink-0 sm:w-full"
+                  className="docket-ruling w-full shrink-0 snap-start"
                 >
                   {(() => {
                     const v = verdictFor(j);
@@ -636,6 +663,23 @@ export default function Home() {
                 </div>
               ))}
             </div>
+
+            {mode === "A" && (
+              <div className="mt-3 flex justify-center gap-2">
+                {JURISDICTIONS.map((j) => (
+                  <button
+                    key={j}
+                    type="button"
+                    onClick={() => goToDocket(j)}
+                    aria-label={`Show ${JURISDICTION_LABELS[j]} ruling`}
+                    aria-current={activeJuris === j ? "true" : undefined}
+                    className={`h-2.5 w-2.5 rounded-full transition-colors ${
+                      activeJuris === j ? "bg-tier1" : "bg-muted/40 hover:bg-muted/70"
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
           </section>
         )}
       </div>
