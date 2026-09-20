@@ -78,7 +78,24 @@ const SAMPLES: Array<{ id: string; label: string; publicPath: string }> = [
   { id: "B13", label: "Grass clippings", publicPath: "/benchmark_images/B13.svg" },
   { id: "B17", label: "Construction debris", publicPath: "/benchmark_images/B17.svg" },
   { id: "B14", label: "Used diaper", publicPath: "/benchmark_images/B14.svg" },
+  { id: "B09", label: "Pizza box (grease)", publicPath: "/benchmark_images/B09.svg" },
+  { id: "B10", label: "Takeout container", publicPath: "/benchmark_images/B10.svg" },
+  { id: "B11", label: "Coffee cup", publicPath: "/benchmark_images/B11.svg" },
 ];
+
+function friendlyPerceptionError(raw: string | undefined | null): string {
+  if (!raw) return "Perception returned no output.";
+  if (raw.includes("GEMINI_API_KEY")) {
+    return "Perception unavailable — no API key configured on this deployment.";
+  }
+  if (raw.includes("quota") || raw.includes("429") || raw.includes("rate limit")) {
+    return "Perception is rate-limited right now — try again shortly.";
+  }
+  if (raw.includes("fetch failed") || raw.toLowerCase().includes("unreachable")) {
+    return "Perception service unreachable right now.";
+  }
+  return raw;
+}
 
 async function toDataUri(href: string): Promise<string> {
   const res = await fetch(href);
@@ -196,6 +213,7 @@ export default function Home() {
   const [perceptionCount, setPerceptionCount] = useState(0);
   const [cachedVerdicts, setCachedVerdicts] = useState<Partial<Record<Jurisdiction, Verdict>> | null>(null);
   const [cachedLabel, setCachedLabel] = useState<string | null>(null);
+  const docketPresentRef = useRef(false);
 
   const sample = SAMPLES.find((s) => s.id === sampleId) ?? SAMPLES[0];
   const shownImage = uploadDataUrl ?? sample.publicPath;
@@ -230,9 +248,7 @@ export default function Home() {
           setCachedVerdicts(cached);
           setCachedLabel(`${sample.label} (${sampleId})`);
         } else {
-          setPerceptionNote(
-            st.perception?.error ?? "Perception returned no output."
-          );
+          setPerceptionNote(friendlyPerceptionError(st.perception?.error));
         }
       }
     } finally {
@@ -284,8 +300,8 @@ export default function Home() {
     if (best !== activeJuris) setActiveJuris(best);
   }
 
-  async function onClarify(answer: Record<string, unknown>, sc: string) {
-    await ctl.answerClarify(activeJuris, sc, answer);
+  async function onClarify(answer: Record<string, unknown>, sc: string, j: Jurisdiction) {
+    await ctl.answerClarify(j, sc, answer);
     setVersion((v) => v + 1);
   }
 
@@ -310,6 +326,22 @@ export default function Home() {
   const [bVerdict, setBVerdict] = useState<Verdict | null>(null);
   const [bUsedNetwork, setBUsedNetwork] = useState(false);
   const [bStreamOptions, setBStreamOptions] = useState<string[]>(streamsFor("india"));
+
+  useEffect(() => {
+    const present = Boolean(
+      ctlState.perception?.output || cachedVerdicts || (mode === "B" && bVerdict)
+    );
+    if (!present || docketPresentRef.current) return;
+    docketPresentRef.current = true;
+    if (mode === "A" && activeJuris !== "india") {
+      docketRefs.current[activeJuris]?.scrollIntoView({
+        behavior: "auto",
+        inline: "center",
+        block: "nearest",
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ctlState.perception?.output, cachedVerdicts, bVerdict, mode]);
 
   useEffect(() => {
     setBStreamOptions(streamsFor(activeJuris));
@@ -558,8 +590,7 @@ export default function Home() {
               <div className="mt-4 space-y-3">
                 <p className="text-xs text-muted">
                   No photograph required. Known attributes are resolved against the bundled
-                  rules corpus entirely on-device — script enforces zero network calls (tests
-                  override globalThis.fetch to throw).
+                  rules corpus entirely on-device (fully offline — enforced in CI).
                 </p>
                 <div className="grid grid-cols-2 gap-3">
                   <label className="flex flex-col gap-1 text-xs font-medium text-ink">
@@ -589,7 +620,7 @@ export default function Home() {
                   </label>
                 </div>
                 <label className="flex flex-col gap-1 text-xs font-medium text-ink">
-                  Perception confidence: {(bConfidence * 100).toFixed(0)}%
+                  Confidence threshold: {(bConfidence * 100).toFixed(0)}%
                   <input
                     type="range"
                     min={0.5}
@@ -608,8 +639,7 @@ export default function Home() {
                   Get verdict (Mode B)
                 </button>
                 <p className="text-xs text-muted">
-                  Mode B makes zero network calls by construction — enforced in tests, where{" "}
-                  <code className="font-mono">globalThis.fetch</code> is overridden to throw.{" "}
+                  Fully offline — CI asserts zero network calls by construction.{" "}
                   {bVerdict && (
                     <span className="text-tier1">
                       used_network={String(bUsedNetwork)}
@@ -621,20 +651,22 @@ export default function Home() {
           </section>
         )}
 
-        {(ctlState.perception?.output || cachedVerdicts) && (
+        {(ctlState.perception?.output || cachedVerdicts || (mode === "B" && bVerdict)) && (
           <section className="animate-rise mb-6 rounded-2xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-xl">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h2 className="text-base font-semibold text-ink">Docket</h2>
               <JurisdictionToggle value={activeJuris} onChange={onToggle} />
             </div>
-            <p className="mt-2 text-xs text-muted">
-              One perception, three rulings. The matrix re-runs per jurisdiction; perception
-              does not.
-            </p>
+            {mode === "A" && (
+              <p className="mt-2 text-xs text-muted">
+                One perception, three rulings. The matrix re-runs per jurisdiction; perception
+                does not.
+              </p>
+            )}
             {cachedVerdicts && (
               <p className="animate-rise mt-3 rounded-xl border border-tier2/40 border-l-2 bg-tier2/10 px-3 py-2 text-sm text-tier2" role="status">
-                Perception offline — showing cached matrix verdict ({cachedLabel}). Every Gemini
-                model in the chain is rate-limited or unreachable right now.
+                Vision engine unavailable — showing pre-computed matrix verdicts for this sample
+                ({cachedLabel}). Same deterministic lookup either way.
               </p>
             )}
 

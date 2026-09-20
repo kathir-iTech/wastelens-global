@@ -52,7 +52,7 @@ Set `GEMINI_API_KEY` in `.env.local` to enable live fallback perception (Mode A)
 - `npm run ingest` — writes the local retrieval index (`data/generated/retrieval_index.json`)
 - `npm run resolve-model` — build-time check of the Flash-tier vision model on the Gemini models page
 - `npm run gen-images` — regenerates the clearly-labeled synthetic benchmark renders
-- `tsx scripts/generate-sample-gallery.ts` — recomputes the 9 cached-gallery verdict snapshots from the matrix (writes `data/sample_gallery.json`)
+- `tsx scripts/generate-sample-gallery.ts` — recomputes the cached-gallery verdict snapshots from the matrix (12 cases today; snapshots only for the three jurisdictional rulings of B14) (writes `data/sample_gallery.json`)
 
 ## Benchmark
 

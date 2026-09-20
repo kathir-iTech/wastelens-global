@@ -52,7 +52,7 @@ curl -s https://wastelens-global.vercel.app/ | Select-String -SimpleMatch "Sampl
 #    wait for verdict + rule text. Expect 1–3 s for the Gemini round-trip.
 ```
 
-Mode B (known attributes) and the 9-case sample gallery are fully self-contained and
+Mode B (known attributes) and the sample gallery (12 benchmark cases; only the diaper has three-jurisdiction cached snapshots) are fully self-contained and
 work without any key or network — a deploy missing the key is a partial deploy, not a
 broken one, and the checks above distinguish the two.
 

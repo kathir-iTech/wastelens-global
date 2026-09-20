@@ -37,7 +37,7 @@ export function Tier2Flow({
 }: {
   verdict: Verdict;
   jurisdiction: Jurisdiction;
-  onAnswer: (answer: Record<string, unknown>, scope: string) => void;
+  onAnswer: (answer: Record<string, unknown>, scope: string, jurisdiction: Jurisdiction) => void;
   imageSrc?: string | null;
 }) {
   const [scope, setScope] = useState("households");
@@ -50,7 +50,7 @@ export function Tier2Flow({
 
   function answer(sid: string) {
     setApplied(sid);
-    onAnswer({ stream: sid }, scope);
+    onAnswer({ stream: sid }, scope, jurisdiction);
   }
 
   function submit(e: React.FormEvent) {
@@ -58,7 +58,7 @@ export function Tier2Flow({
     const answer: Record<string, unknown> = {};
     if (customStream.trim()) answer["stream"] = customStream.trim();
     setApplied(customStream.trim() || null);
-    onAnswer(answer, scope);
+    onAnswer(answer, scope, jurisdiction);
   }
 
   return (
