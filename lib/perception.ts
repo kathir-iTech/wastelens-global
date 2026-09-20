@@ -117,7 +117,7 @@ export const GEMINI_RETRY_BACKOFF_MS = 1500;
 export const GEMINI_REQUEST_TIMEOUT_MS = 12000;
 
 export const FALLBACK_MODEL_CHAIN = ["gemini-3.1-flash-lite", "gemini-3.5-flash"];
-const PROBE_IMAGE_REF = path.resolve("data/benchmark_images/B01.svg");
+const PROBE_IMAGE_REF = path.resolve("public/benchmark_images/B01.svg");
 const validatedFallbacks = new Set<string>();
 const quotaDeadModels = new Set<string>();
 

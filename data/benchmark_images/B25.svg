@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
-  <rect width="640" height="480" fill="#dcfce7"/>
-  <text x="24" y="40" font-family="monospace" font-size="18" fill="#1e293b">SYNTHETIC RENDER — B25 — empty glass baby-food jar</text>
-  <path d="M300,170 Q320,120 360,150 Q410,180 380,300 Q360,360 300,350 Q240,340 240,260 Q240,200 300,170 Z" fill="#4ade80" stroke="#334155" stroke-width="6"/>
-  <g opacity="0.6"><ellipse cx="360" cy="280" rx="60" ry="34" fill="#92400e"/><circle cx="290" cy="300" r="26" fill="#b45309"/></g>
-  <text x="24" y="460" font-family="monospace" font-size="14" fill="#475569">Procedurally generated. Not a photograph. For benchmark provenance see data/benchmark_set.json.</text>
-</svg>

@@ -22,7 +22,7 @@ Last refreshed: 2026-09-19 — P0 demo-survival round (model fallback chain, cac
 ## 3. Perception pipeline (`lib/perception.ts`) — P0 hardened
 
 - Model chain: **`gemini-3.8-flash` → `gemini-3.1-flash-lite` → `gemini-3.5-flash`**, tried in order on any failure/429/timeout.
-- **Fallback models are probe-validated** with one real image (`data/benchmark_images/B01.svg`) before being trusted — a model must return a valid `object_class`, not merely exist in the resolver list. Validation is memoized per process.
+- **Fallback models are probe-validated** with one real image (`public/benchmark_images/B01.svg`) before being trusted — a model must return a valid `object_class`, not merely exist in the resolver list. Validation is memoized per process.
 - Per-model retry: **2 attempts, 1.5s fixed backoff, 12s `AbortController` timeout**; the route exports `maxDuration = 30` (real ceiling 2×12 + 1.5 = 25.5s).
 - Quota pools are **per model on the same key** — when 3.8 is over its own RPD/RPM (25/20, 8/5) but lite sits at 0/500, the chain fails over and the site keeps serving live results (proven by a real `model_id: gemini-3.1-flash-lite` success during this round).
 - The raw-VLM evaluation helpers (`perceiveBinForJurisdiction`, `perceiveRawBinGeneric`) route through the same chain, so `raw_vlm`/`lcl` metrics are no longer structurally blocked on the 20-RPD pool.

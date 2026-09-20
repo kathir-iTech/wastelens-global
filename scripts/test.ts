@@ -382,7 +382,7 @@ async function corpusConsumptionTests() {
     }
     assert(streamsFor(juris).length >= 4, `${juris} exposes >=4 streams`);
   }
-  const realPerception = await realPerceive("data/benchmark_images/B05.svg");
+  const realPerception = await realPerceive("public/benchmark_images/B05.svg");
   assert(realPerception.output === null, "real perceive without model weights/key returns honest failure (no fabricated output)");
   console.log(`    INFO: real perceive -> ${JSON.stringify((realPerception as any).error?.slice(0, 90) ?? "n/a")}`);
 }

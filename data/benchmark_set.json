@@ -1,14 +1,14 @@
 {
   "version": "1.0",
   "hand_labeled_before_eval": true,
-  "sourcing_manifest": "Every item's image is a clearly-labeled synthetic render produced by scripts/generate-benchmark-images.ts and committed under data/benchmark_images/. No third-party photographs are embedded because none could be license-verified in this build; the phone_photo/public_photo slots are intentionally unused rather than populated with unverifiable provenance. Ground-truth labels (expected stream + expected tier per jurisdiction) were authored in this file before scripts/evaluate.ts existed. Their only provenance is real corpus rows (data/jurisdictions/*/rules.json) or, for Tier 3, the demonstrated absence of a matching stream in that corpus.",
+  "sourcing_manifest": "Every item's image is a clearly-labeled synthetic render produced by scripts/generate-benchmark-images.ts and committed under public/benchmark_images/. No third-party photographs are embedded because none could be license-verified in this build; the phone_photo/public_photo slots are intentionally unused rather than populated with unverifiable provenance. Ground-truth labels (expected stream + expected tier per jurisdiction) were authored in this file before scripts/evaluate.ts existed. Their only provenance is real corpus rows (data/jurisdictions/*/rules.json) or, for Tier 3, the demonstrated absence of a matching stream in that corpus.",
   "items": [
     {
       "id": "B01",
       "label": "empty glass jar",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B01.svg",
+        "file": "public/benchmark_images/B01.svg",
         "provenance": "procedural SVG; see sourcing_manifest",
         "publicPath": "/benchmark_images/B01.svg"
       },
@@ -47,7 +47,7 @@
       "label": "clear plastic water bottle, empty",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B02.svg",
+        "file": "public/benchmark_images/B02.svg",
         "provenance": "procedural SVG; see sourcing_manifest",
         "publicPath": "/benchmark_images/B02.svg"
       },
@@ -86,7 +86,7 @@
       "label": "aluminium drink can, rinsed",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B03.svg",
+        "file": "public/benchmark_images/B03.svg",
         "provenance": "procedural SVG; see sourcing_manifest",
         "publicPath": "/benchmark_images/B03.svg"
       },
@@ -125,7 +125,7 @@
       "label": "corrugated cardboard shipping box",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B04.svg",
+        "file": "public/benchmark_images/B04.svg",
         "provenance": "procedural SVG; see sourcing_manifest",
         "publicPath": "/benchmark_images/B04.svg"
       },
@@ -164,7 +164,7 @@
       "label": "banana peels",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B05.svg",
+        "file": "public/benchmark_images/B05.svg",
         "provenance": "procedural SVG; see sourcing_manifest",
         "publicPath": "/benchmark_images/B05.svg"
       },
@@ -203,7 +203,7 @@
       "label": "apple core",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B06.svg",
+        "file": "public/benchmark_images/B06.svg",
         "provenance": "procedural SVG; see sourcing_manifest",
         "publicPath": "/benchmark_images/B06.svg"
       },
@@ -242,7 +242,7 @@
       "label": "clean stack of white office paper",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B07.svg",
+        "file": "public/benchmark_images/B07.svg",
         "provenance": "procedural SVG; see sourcing_manifest",
         "publicPath": "/benchmark_images/B07.svg"
       },
@@ -281,7 +281,7 @@
       "label": "empty glass wine bottle",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B08.svg",
+        "file": "public/benchmark_images/B08.svg",
         "provenance": "procedural SVG; see sourcing_manifest",
         "publicPath": "/benchmark_images/B08.svg"
       },
@@ -320,7 +320,7 @@
       "label": "pizza box with grease stains",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B09.svg",
+        "file": "public/benchmark_images/B09.svg",
         "provenance": "procedural SVG (contaminated variant); see sourcing_manifest",
         "publicPath": "/benchmark_images/B09.svg"
       },
@@ -359,7 +359,7 @@
       "label": "takeout container with mixed food residue",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B10.svg",
+        "file": "public/benchmark_images/B10.svg",
         "provenance": "procedural SVG (contaminated variant); see sourcing_manifest",
         "publicPath": "/benchmark_images/B10.svg"
       },
@@ -398,7 +398,7 @@
       "label": "takeaway coffee cup half full",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B11.svg",
+        "file": "public/benchmark_images/B11.svg",
         "provenance": "procedural SVG (contaminated variant); see sourcing_manifest",
         "publicPath": "/benchmark_images/B11.svg"
       },
@@ -437,7 +437,7 @@
       "label": "empty latex paint can",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B12.svg",
+        "file": "public/benchmark_images/B12.svg",
         "provenance": "procedural SVG; see sourcing_manifest",
         "publicPath": "/benchmark_images/B12.svg"
       },
@@ -478,7 +478,7 @@
       "label": "garden grass clippings",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B13.svg",
+        "file": "public/benchmark_images/B13.svg",
         "provenance": "procedural SVG; see sourcing_manifest",
         "publicPath": "/benchmark_images/B13.svg"
       },
@@ -517,7 +517,7 @@
       "label": "used nappy (diaper)",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B14.svg",
+        "file": "public/benchmark_images/B14.svg",
         "provenance": "procedural SVG; see sourcing_manifest",
         "publicPath": "/benchmark_images/B14.svg"
       },
@@ -558,7 +558,7 @@
       "label": "glass mirror",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B15.svg",
+        "file": "public/benchmark_images/B15.svg",
         "provenance": "procedural SVG; see sourcing_manifest",
         "publicPath": "/benchmark_images/B15.svg"
       },
@@ -599,7 +599,7 @@
       "label": "broken CFL bulb",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B16.svg",
+        "file": "public/benchmark_images/B16.svg",
         "provenance": "procedural SVG; see sourcing_manifest",
         "publicPath": "/benchmark_images/B16.svg"
       },
@@ -641,7 +641,7 @@
       "label": "concrete and brick construction debris",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B17.svg",
+        "file": "public/benchmark_images/B17.svg",
         "provenance": "procedural SVG; see sourcing_manifest",
         "publicPath": "/benchmark_images/B17.svg"
       },
@@ -682,7 +682,7 @@
       "label": "broken mobile phone (e-waste)",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B18.svg",
+        "file": "public/benchmark_images/B18.svg",
         "provenance": "procedural SVG; see sourcing_manifest",
         "publicPath": "/benchmark_images/B18.svg"
       },
@@ -723,7 +723,7 @@
       "label": "car battery",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B19.svg",
+        "file": "public/benchmark_images/B19.svg",
         "provenance": "procedural SVG; see sourcing_manifest",
         "publicPath": "/benchmark_images/B19.svg"
       },
@@ -765,7 +765,7 @@
       "label": "EPS (styrofoam) clamshell",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B20.svg",
+        "file": "public/benchmark_images/B20.svg",
         "provenance": "procedural SVG; see sourcing_manifest",
         "publicPath": "/benchmark_images/B20.svg"
       },
@@ -804,7 +804,7 @@
       "label": "metal tin can with paper label, rinsed",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B21.svg",
+        "file": "public/benchmark_images/B21.svg",
         "provenance": "procedural SVG; see sourcing_manifest",
         "publicPath": "/benchmark_images/B21.svg"
       },
@@ -843,7 +843,7 @@
       "label": "soiled paper napkin",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B22.svg",
+        "file": "public/benchmark_images/B22.svg",
         "provenance": "procedural SVG (contaminated variant); see sourcing_manifest",
         "publicPath": "/benchmark_images/B22.svg"
       },
@@ -882,7 +882,7 @@
       "label": "empty milk carton (tetra pak)",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B23.svg",
+        "file": "public/benchmark_images/B23.svg",
         "provenance": "procedural SVG; see sourcing_manifest",
         "publicPath": "/benchmark_images/B23.svg"
       },
@@ -921,7 +921,7 @@
       "label": "coffee grounds",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B24.svg",
+        "file": "public/benchmark_images/B24.svg",
         "provenance": "procedural SVG; see sourcing_manifest",
         "publicPath": "/benchmark_images/B24.svg"
       },
@@ -960,7 +960,7 @@
       "label": "empty glass baby-food jar",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B25.svg",
+        "file": "public/benchmark_images/B25.svg",
         "provenance": "procedural SVG; see sourcing_manifest",
         "publicPath": "/benchmark_images/B25.svg"
       },
@@ -999,7 +999,7 @@
       "label": "mouldy bread loaf",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B26.svg",
+        "file": "public/benchmark_images/B26.svg",
         "provenance": "procedural SVG (contaminated variant); see sourcing_manifest",
         "publicPath": "/benchmark_images/B26.svg"
       },
@@ -1040,7 +1040,7 @@
       "label": "half-full wet paint can",
       "image": {
         "kind": "synthetic_render",
-        "file": "data/benchmark_images/B27.svg",
+        "file": "public/benchmark_images/B27.svg",
         "provenance": "procedural SVG; see sourcing_manifest",
         "publicPath": "/benchmark_images/B27.svg"
       },

@@ -18,7 +18,6 @@ interface BenchFile {
 }
 
 const BENCH = path.resolve("data/benchmark_set.json");
-const OUT_DIR = path.resolve("data/benchmark_images");
 const PUBLIC_DIR = path.resolve("public/benchmark_images");
 
 function hashString(s: string): number {
@@ -83,17 +82,14 @@ function svgFor(item: BenchItem): string {
 
 function main(): number {
   const bench = JSON.parse(readFileSync(BENCH, "utf8")) as BenchFile;
-  mkdirSync(OUT_DIR, { recursive: true });
   mkdirSync(PUBLIC_DIR, { recursive: true });
   let count = 0;
   for (const item of bench.items) {
     const svg = svgFor(item);
-    const target = path.resolve(item.image.file);
-    writeFileSync(target, svg);
     writeFileSync(path.resolve("public/benchmark_images", `${item.id}.svg`), svg);
     count++;
   }
-  console.log(`GEN-IMAGES wrote ${count} synthetic SVG renders to ${OUT_DIR} and public/benchmark_images`);
+  console.log(`GEN-IMAGES wrote ${count} synthetic SVG renders to public/benchmark_images (single source)`);
   console.log("GEN-IMAGES all images are procedurally generated; not photographs.");
   return 0;
 }
