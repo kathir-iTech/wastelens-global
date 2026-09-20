@@ -119,8 +119,28 @@ export const GEMINI_REQUEST_TIMEOUT_MS = 12000;
 export const FALLBACK_MODEL_CHAIN = ["gemini-3.1-flash-lite", "gemini-3.5-flash"];
 const PROBE_IMAGE_REF = path.resolve("data/benchmark_images/B01.svg");
 const validatedFallbacks = new Set<string>();
+const quotaDeadModels = new Set<string>();
+
+function markQuotaDead(model: string): void {
+  quotaDeadModels.add(model);
+}
+
+function isQuotaDead(model: string): boolean {
+  return quotaDeadModels.has(model);
+}
+
+function joinableChain(primary: string | null): string[] {
+  const out: string[] = [];
+  const push = (m: string | null) => {
+    if (m && !out.includes(m) && !isQuotaDead(m)) out.push(m);
+  };
+  push(primary);
+  for (const fb of FALLBACK_MODEL_CHAIN) push(fb);
+  return out;
+}
 
 async function probeModel(model: string): Promise<boolean> {
+  if (isQuotaDead(model)) return false;
   if (validatedFallbacks.has(model)) return true;
   const res = await callPerceiveModel(PROBE_IMAGE_REF, model);
   if (res.output && res.output.object_class) {
@@ -216,6 +236,10 @@ async function callPerceiveModel(
   );
 
   if (!res.ok) {
+    if (res.status === 429 || res.status === 403) {
+      markQuotaDead(model);
+      geminiQuotaBlocked = true;
+    }
     return {
       output: null,
       error: `Gemini ${model} returned ${res.status}: ${(await res.text()).slice(0, 300)}`,
@@ -236,19 +260,23 @@ async function perceiveViaGemini(
   imageRef: string,
   model: string
 ): Promise<PerceptionResult | PerceptionFailure> {
-  const primary = await callPerceiveModel(imageRef, model);
-  if (primary.output) return primary;
-  const tried = [model];
+  const candidates = joinableChain(model);
+  if (candidates.length === 0) {
+    return {
+      output: null,
+      error: "no Gemini model available (all chain models quota-dead this session)",
+      model_id: null,
+    };
+  }
+  const tried: string[] = [];
   const reasons: string[] = [];
-  if (primary.error) reasons.push(primary.error);
-  for (const fb of FALLBACK_MODEL_CHAIN) {
-    if (fb === model || tried.includes(fb)) continue;
-    tried.push(fb);
-    if (!(await probeModel(fb))) {
-      reasons.push(`fallback ${fb} failed single-image probe validation`);
+  for (const candidate of candidates) {
+    tried.push(candidate);
+    if (candidate !== candidates[0] && !(await probeModel(candidate))) {
+      reasons.push(`fallback ${candidate} failed single-image probe validation`);
       continue;
     }
-    const res = await callPerceiveModel(imageRef, fb);
+    const res = await callPerceiveModel(imageRef, candidate);
     if (res.output) return res;
     if (res.error) reasons.push(res.error);
   }
@@ -268,13 +296,10 @@ async function generateWithFallback(
   if (!apiKey || !primary) return null;
   const encoded = await encodeImageRef(imageRef);
   if (!encoded) return null;
-  const candidates = [primary];
-  for (const fb of FALLBACK_MODEL_CHAIN) {
-    if (!candidates.includes(fb)) candidates.push(fb);
-  }
+  const candidates = joinableChain(primary);
   let sawQuota = false;
   for (const model of candidates) {
-    if (model !== primary && !(await probeModel(model))) continue;
+    if (model !== candidates[0] && !(await probeModel(model))) continue;
     const res = await geminiFetch(
       `${GEMINI_API_ROOT}/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`,
       {
@@ -305,6 +330,7 @@ async function generateWithFallback(
     const blocked = res.status === 429 || res.status === 403;
     if (blocked) {
       sawQuota = true;
+      markQuotaDead(model);
       console.warn(`RAW-VLM ${model} -> ${res.status} ${(await res.text()).slice(0, 120)}`);
     }
   }
