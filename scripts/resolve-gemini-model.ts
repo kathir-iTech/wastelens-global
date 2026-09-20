@@ -80,8 +80,8 @@ async function main(): Promise<number> {
     };
     writeFileSync(OUT_FILE, JSON.stringify(record, null, 2) + "\n");
     console.log(`RESOLVE status=unreachable reason=${record.reason}`);
-    console.log(`RESOLVE written=${OUT_FILE}`);
-    return 1;
+    console.log(`RESOLVE written=${OUT_FILE} exit=0 build-continues (stale record preferred over a failed deploy)`);
+    return 0;
   }
 }
 

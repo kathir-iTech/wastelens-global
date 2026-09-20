@@ -15,6 +15,52 @@ import { VerdictCard } from "@/app/components/VerdictCard";
 import { Tier2Flow } from "@/app/components/Tier2Flow";
 import { SampleGallery } from "@/app/components/SampleGallery";
 import { PerceptionCard } from "@/app/components/PerceptionCard";
+import galleryData from "@/data/sample_gallery.json";
+
+interface GalleryVerdict {
+  tier: number;
+  stream: string | null;
+  clause_id: string | null;
+  rule_text: string | null;
+  source_url: string | null;
+  effective_date: string | null;
+  question?: string;
+  guidance?: string;
+}
+
+interface GalleryCase {
+  case_id: string;
+  item_id: string;
+  label: string;
+  jurisdiction: string;
+  note: string;
+  image: string;
+  verdict: GalleryVerdict;
+}
+
+function cachedVerdictsFor(itemId: string): Partial<Record<Jurisdiction, Verdict>> | null {
+  const cases = (galleryData as { cases: GalleryCase[] }).cases.filter(
+    (c) => c.item_id === itemId
+  );
+  if (cases.length === 0) return null;
+  const result: Partial<Record<Jurisdiction, Verdict>> = {};
+  for (const c of cases) {
+    const v = c.verdict;
+    result[c.jurisdiction as Jurisdiction] = {
+      tier: v.tier as Verdict["tier"],
+      stream: v.stream,
+      clause_id: v.clause_id,
+      rule_text: v.rule_text,
+      source_url: v.source_url,
+      effective_date: v.effective_date,
+      fine_bracket: null,
+      exemptions: null,
+      ...(v.question !== undefined ? { question: v.question } : {}),
+      ...(v.guidance !== undefined ? { guidance: v.guidance } : {}),
+    };
+  }
+  return JURISDICTIONS.every((j) => result[j] !== undefined) ? result : null;
+}
 
 const SAMPLES: Array<{ id: string; label: string; publicPath: string }> = [
   { id: "B05", label: "Banana peels", publicPath: "/benchmark_images/B05.svg" },
@@ -89,6 +135,8 @@ export default function Home() {
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const [perceptionCount, setPerceptionCount] = useState(0);
+  const [cachedVerdicts, setCachedVerdicts] = useState<Partial<Record<Jurisdiction, Verdict>> | null>(null);
+  const [cachedLabel, setCachedLabel] = useState<string | null>(null);
 
   const sample = SAMPLES.find((s) => s.id === sampleId) ?? SAMPLES[0];
   const shownImage = uploadDataUrl ?? sample.publicPath;
@@ -99,24 +147,12 @@ export default function Home() {
     setGalleryOpen(false);
   }
 
-  const fetchCount = useRef(0);
-  const [fetchCountShown, setFetchCountShown] = useState(0);
-  useEffect(() => {
-    const original = globalThis.fetch;
-    globalThis.fetch = ((...args: Parameters<typeof fetch>) => {
-      fetchCount.current += 1;
-      setFetchCountShown(fetchCount.current);
-      return original(...args);
-    }) as typeof fetch;
-    return () => {
-      globalThis.fetch = original;
-    };
-  }, []);
-
   async function runPerception() {
     setPerceptionCount((c) => c + 1);
     setPerceiving(true);
     setPerceptionNote(null);
+    setCachedVerdicts(null);
+    setCachedLabel(null);
     setScanStage("identifying");
     setScanElapsed(0);
     const stageTimer = setTimeout(() => setScanStage("checking"), 800);
@@ -129,9 +165,15 @@ export default function Home() {
       setVersion((v) => v + 1);
       const st = ctl.getState();
       if (st.perception?.output === null) {
-        setPerceptionNote(
-          st.perception?.error ?? "Perception returned no output."
-        );
+        const cached = cachedVerdictsFor(sampleId);
+        if (cached) {
+          setCachedVerdicts(cached);
+          setCachedLabel(`${sample.label} (${sampleId})`);
+        } else {
+          setPerceptionNote(
+            st.perception?.error ?? "Perception returned no output."
+          );
+        }
       }
     } finally {
       clearTimeout(stageTimer);
@@ -220,8 +262,12 @@ export default function Home() {
 
   const docketJuris: Jurisdiction[] = mode === "A" ? JURISDICTIONS : [activeJuris];
 
-  const verdictFor = (j: Jurisdiction) =>
-    mode === "A" ? ctlState.verdicts[j] : j === activeJuris ? bVerdict ?? undefined : undefined;
+  const verdictFor = (j: Jurisdiction) => {
+    if (mode === "A") {
+      return ctlState.verdicts[j] ?? (cachedVerdicts ? cachedVerdicts[j] : undefined);
+    }
+    return j === activeJuris ? bVerdict ?? undefined : undefined;
+  };
 
   return (
     <main className="min-h-screen bg-paper text-ink">
@@ -454,10 +500,11 @@ export default function Home() {
                   Get verdict (Mode B)
                 </button>
                 <p className="text-xs text-muted">
-                  network calls: <span className="font-mono font-semibold text-ink">{fetchCountShown}</span>{" "}
+                  Mode B makes zero network calls by construction — enforced in tests, where{" "}
+                  <code className="font-mono">globalThis.fetch</code> is overridden to throw.{" "}
                   {bVerdict && (
                     <span className="text-tier1">
-                      Mode B used_network={String(bUsedNetwork)}
+                      used_network={String(bUsedNetwork)}
                     </span>
                   )}
                 </p>
@@ -466,7 +513,7 @@ export default function Home() {
           </section>
         )}
 
-        {ctlState.perception?.output && (
+        {(ctlState.perception?.output || cachedVerdicts) && (
           <section className="animate-rise mb-6 rounded-2xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-xl">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h2 className="text-base font-semibold text-ink">Docket</h2>
@@ -476,6 +523,12 @@ export default function Home() {
               One perception, three rulings. The matrix re-runs per jurisdiction; perception
               does not.
             </p>
+            {cachedVerdicts && (
+              <p className="animate-rise mt-3 rounded-xl border border-tier2/40 border-l-2 bg-tier2/10 px-3 py-2 text-sm text-tier2" role="status">
+                Perception offline — showing cached matrix verdict ({cachedLabel}). Every Gemini
+                model in the chain is rate-limited or unreachable right now.
+              </p>
+            )}
 
             <div className="docket-scroll -mx-5 mt-4 flex snap-x gap-3 overflow-x-auto px-5 pb-1" onScroll={onDocketScroll}>
               {docketJuris.map((j) => (

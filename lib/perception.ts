@@ -116,6 +116,20 @@ export const GEMINI_ATTEMPTS = 2;
 export const GEMINI_RETRY_BACKOFF_MS = 1500;
 export const GEMINI_REQUEST_TIMEOUT_MS = 12000;
 
+export const FALLBACK_MODEL_CHAIN = ["gemini-3.1-flash-lite", "gemini-3.5-flash"];
+const PROBE_IMAGE_REF = path.resolve("data/benchmark_images/B01.svg");
+const validatedFallbacks = new Set<string>();
+
+async function probeModel(model: string): Promise<boolean> {
+  if (validatedFallbacks.has(model)) return true;
+  const res = await callPerceiveModel(PROBE_IMAGE_REF, model);
+  if (res.output && res.output.object_class) {
+    validatedFallbacks.add(model);
+    return true;
+  }
+  return false;
+}
+
 async function geminiFetch(
   url: string,
   init: RequestInit,
@@ -155,7 +169,7 @@ async function geminiFetch(
   return new Response("Gemini request failed", { status: 503 });
 }
 
-async function perceiveViaGemini(
+async function callPerceiveModel(
   imageRef: string,
   model: string
 ): Promise<PerceptionResult | PerceptionFailure> {
@@ -218,6 +232,86 @@ async function perceiveViaGemini(
   return { output, engine: "gemini-fallback", model_id: model, last_resolved: null };
 }
 
+async function perceiveViaGemini(
+  imageRef: string,
+  model: string
+): Promise<PerceptionResult | PerceptionFailure> {
+  const primary = await callPerceiveModel(imageRef, model);
+  if (primary.output) return primary;
+  const tried = [model];
+  const reasons: string[] = [];
+  if (primary.error) reasons.push(primary.error);
+  for (const fb of FALLBACK_MODEL_CHAIN) {
+    if (fb === model || tried.includes(fb)) continue;
+    tried.push(fb);
+    if (!(await probeModel(fb))) {
+      reasons.push(`fallback ${fb} failed single-image probe validation`);
+      continue;
+    }
+    const res = await callPerceiveModel(imageRef, fb);
+    if (res.output) return res;
+    if (res.error) reasons.push(res.error);
+  }
+  return {
+    output: null,
+    error: `${reasons.join(" | ")}; tried chain: ${tried.join(" -> ")}`,
+    model_id: tried.join(","),
+  };
+}
+
+async function generateWithFallback(
+  imageRef: string,
+  promptText: string
+): Promise<{ text: string; model: string } | null> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  const primary = currentFlashVisionModel();
+  if (!apiKey || !primary) return null;
+  const encoded = await encodeImageRef(imageRef);
+  if (!encoded) return null;
+  const candidates = [primary];
+  for (const fb of FALLBACK_MODEL_CHAIN) {
+    if (!candidates.includes(fb)) candidates.push(fb);
+  }
+  let sawQuota = false;
+  for (const model of candidates) {
+    if (model !== primary && !(await probeModel(model))) continue;
+    const res = await geminiFetch(
+      `${GEMINI_API_ROOT}/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: "user",
+              parts: [
+                { inline_data: { mime_type: encoded.mime, data: encoded.data.split(",")[1] } },
+                { text: promptText },
+              ],
+            },
+          ],
+        }),
+      }
+    );
+    if (res.ok) {
+      const body = (await res.json()) as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> };
+      const text = body.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+      if (text.trim()) {
+        geminiQuotaBlocked = false;
+        return { text, model };
+      }
+      continue;
+    }
+    const blocked = res.status === 429 || res.status === 403;
+    if (blocked) {
+      sawQuota = true;
+      console.warn(`RAW-VLM ${model} -> ${res.status} ${(await res.text()).slice(0, 120)}`);
+    }
+  }
+  geminiQuotaBlocked = geminiQuotaBlocked || sawQuota;
+  return null;
+}
+
 function localModelsPresent(): string[] {
   const dir = process.env.WASTELENS_MODELS_DIR || "models";
   const found: string[] = [];
@@ -270,67 +364,23 @@ export async function perceiveBinForJurisdiction(
   jurisdiction: string,
   vocabulary: string[]
 ): Promise<{ bin: string; stream: string | null; model_id: string } | null> {
-  const model = currentFlashVisionModel();
-  if (!model || !process.env.GEMINI_API_KEY) return null;
-  const encoded = await encodeImageRef(imageRef);
-  if (!encoded) return null;
-  const res = await geminiFetch(`${GEMINI_API_ROOT}/models/${model}:generateContent?key=${encodeURIComponent(process.env.GEMINI_API_KEY)}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      contents: [
-        {
-          role: "user",
-          parts: [
-            { inline_data: { mime_type: encoded.mime, data: encoded.data.split(",")[1] } },
-            {
-              text: `This is ${jurisdiction} household waste. Which single stream from this list does the item belong to? ${vocabulary.join(
-                ", "
-              )}. Answer with exactly one stream name from the list. No explanation.`,
-            },
-          ],
-        },
-      ],
-    }),
-  });
-  if (!res.ok) {
-    geminiQuotaBlocked = res.status === 429 || res.status === 403;
-    console.warn(`RAW-VLM ${model} -> ${res.status} ${(await res.text()).slice(0, 120)}`);
-    return null;
-  }
-  const body = (await res.json()) as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> };
-  const text = body.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
-  const lower = text.toLowerCase();
+  const out = await generateWithFallback(
+    imageRef,
+    `This is ${jurisdiction} household waste. Which single stream from this list does the item belong to? ${vocabulary.join(
+      ", "
+    )}. Answer with exactly one stream name from the list. No explanation.`
+  );
+  if (!out) return null;
+  const lower = out.text.toLowerCase();
   const match = vocabulary.find((v) => lower.includes(v.toLowerCase()));
-  return { bin: text.split("\n")[0].trim(), stream: match ?? null, model_id: model };
+  return { bin: out.text.split("\n")[0].trim(), stream: match ?? null, model_id: out.model };
 }
 
 export async function perceiveRawBinGeneric(imageRef: string): Promise<{ bin: string; model_id: string } | null> {
-  const model = currentFlashVisionModel();
-  if (!model || !process.env.GEMINI_API_KEY) return null;
-  const encoded = await encodeImageRef(imageRef);
-  if (!encoded) return null;
-  const res = await geminiFetch(`${GEMINI_API_ROOT}/models/${model}:generateContent?key=${encodeURIComponent(process.env.GEMINI_API_KEY)}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      contents: [
-        {
-          role: "user",
-          parts: [
-            { inline_data: { mime_type: encoded.mime, data: encoded.data.split(",")[1] } },
-            { text: "Which single bin/receptacle should this item be placed in? Name the stream in one short phrase. No explanation." },
-          ],
-        },
-      ],
-    }),
-  });
-  if (!res.ok) {
-    geminiQuotaBlocked = res.status === 429 || res.status === 403;
-    console.warn(`RAW-VLM ${model} -> ${res.status} ${(await res.text()).slice(0, 120)}`);
-    return null;
-  }
-  const body = (await res.json()) as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> };
-  const text = body.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
-  return { bin: text.split("\n")[0].trim(), model_id: model };
+  const out = await generateWithFallback(
+    imageRef,
+    "Which single bin/receptacle should this item be placed in? Name the stream in one short phrase. No explanation."
+  );
+  if (!out) return null;
+  return { bin: out.text.split("\n")[0].trim(), model_id: out.model };
 }

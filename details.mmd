@@ -1,0 +1,149 @@
+%% WasteLens Global — details.mmd
+%% Living research diagram. Verified against repo at P0 commit (model-fallback round, 2026-09-19).
+%% Companion to details.md. Every number below was measured/verified, not remembered.
+
+flowchart TB
+    subgraph CAPTURE["Capture (any path)"]
+        C1["Camera / upload (capture=environment)"]
+        C2["Bundled sample image (still a live Gemini call — never pre-computed)"]
+        C3["Mode B known attributes (stream + scope + confidence)"]
+        C4["Mode C gallery (12 pre-adjudicated cases, 4/jurisdiction incl. B14)"]
+    end
+
+    subgraph ENGINE["Deterministic engine (the law decides)"]
+        P["lib/perception.ts — Gemini chain: gemini-3.8-flash -> 3.1-flash-lite -> 3.5-flash<br/>fallbacks probe-validated with a real image before trusted<br/>2 attempts/model · 1.5s backoff · 12s AbortController timeout"]
+        R["lib/retriever.ts — weighted scorer<br/>+40 stream · +25 scope · +10 term · +2 word"]
+        M["lib/matrix.ts — pure, synchronous, deterministic<br/>same input + rule_version -> identical output"]
+    end
+
+    subgraph OUT["Output"]
+        O1["Tier 1 Confirmed — full verdict + rule_text + source_url"]
+        O2["Tier 2 Clarify — candidate streams + question (Tier2Flow)"]
+        O3["Tier 3 Coverage gap — refusal, fine_bracket: null (structural)"]
+        O4["Chain fully dead -> cached matrix verdict, labeled 'Perception offline'<br/>(B14: India sanitary / NYC residual / England residual, all Tier 1)"]
+    end
+
+    C1 --> P
+    C2 --> P
+    C3 --> R
+    C4 --> M
+    P --> R
+    R --> M
+    M --> O1
+    M --> O2
+    M --> O3
+    P -.exhausted chain.-> O4
+
+    style P fill:#101820,stroke:#7fd1a0
+    style R fill:#101820,stroke:#f2c46f
+    style M fill:#101820,stroke:#ef8f8f
+
+flowchart LR
+    subgraph Corpus["Corpus (data/jurisdictions, static JSON — no DB, no embeddings)"]
+        IN["India — 8 rows · 4 streams<br/>wet · dry · sanitary · special-care<br/>citation_precision: general (all 8)"]
+        NY["NYC — 8 rows · 4 streams<br/>food · paper-card · metal-plastic-glass · residual<br/>date_precision: year x6, exact x2"]
+        EN["England — 10 rows · 5 streams<br/>+ garden · exemptions on 6 rows<br/>household 2026-03-31 vs business 2025-03-31"]
+    end
+    IN --- RULE
+    NY --- RULE
+    EN --- RULE
+    RULE["fine_bracket = null on ALL 26 rows (verified) — no fine figure survives primary-source check"]
+
+flowchart TD
+    ATT["attributes {stream?, scope?, object_class, material_surface, confidence}"]
+    ATT --> CHK{high-confidence match<br/>to a verified corpus row?}
+    CHK -- yes --> T1["Tier 1 Confirmed<br/>rule applied as-is"]
+    CHK -- confidence < 0.8 or<br/>ambiguous scope --> T2["Tier 2 Clarify<br/>one answer re-runs matrix (no new photo)"]
+    CHK -- no verified row matches --> T3["Tier 3 Coverage gap<br/>general guidance only · fine_bracket null"]
+
+pie showData title "Tier coverage over benchmark items (27 items x 3 jurisdictions = 81 verdicts)"
+    "Tier 1 — Confirmed" : 61.7
+    "Tier 2 — Clarify" : 18.5
+    "Tier 3 — Coverage gap" : 19.8
+
+sequenceDiagram
+    autonumber
+    participant U as Browser (Mode A)
+    participant R as /api/perceive (maxDuration=30)
+    participant G as Gemini chain (3 pools on one key)
+    U->>R: POST image_data (data:image/* URI)
+    R->>G: try gemini-3.8-flash (AbortController, 2 attempts, 12s cap)
+    alt 3.8 succeeds
+        G-->>R: {output, model_id}
+    else 3.8 429 (pool over its own RPD/RPM) / 5xx / timeout
+        R->>G: probe gemini-3.1-flash-lite with one real image (validated once)
+        R->>G: real call on 3.1-flash-lite (per-model pool is separate: 0/500)
+        G-->>R: result (model_id = serving model)
+    else entire chain exhausted
+        R-->>U: clean failure body
+        Note over U: client falls back to cached matrix verdict, labeled "Perception offline"
+    end
+
+flowchart LR
+    subgraph Quality["Verified gate (P0 round)"]
+        A["typecheck ✓"]
+        B["lint — 0 warnings ✓"]
+        C["test — 488 passed / 0 failed ✓"]
+        D["build ✓ (First Load JS 124 kB)"]
+        E["verify-rules — corpus problems 0, orphaned labels 0 ✓"]
+        F["resolve-gemini-model never aborts build (network blip -> status:unreachable, exit 0)"]
+    end
+    subgraph Metrics["Offline evaluate (2026-09-19)"]
+        G["accuracy_adjudicated = 1.0000 (81/81) — ORACLE self-consistency, not real-world"]
+        H["jdr = 0.2083 (5/24) — jurisdiction divergence"]
+        I["p95 adjudicate = 14 µs · p95 Mode B pipeline = 51 µs (real-time offline)"]
+        J["raw_vlm / lcl = not_computed while 3.8 quota dead — chain now fails over to lite, runnable"]
+    end
+
+mindmap
+  root((WasteLens Global))
+    App UI
+      Camera-first hero
+      No fetch monkey-patch in client (removed P0)
+      Cached-verdict banner when perception offline
+      Gallery 12 cases hidden behind no-camera link
+      Dark aurora + glassmorphic
+    lib
+      perception.ts — 3-model chain + probe validation
+      matrix.ts — deterministic, high-risk to change
+      retriever.ts — +40/+25/+10/+2
+      corpus.ts — unified loader
+      attributeMapper.ts — vision -> stream (NYC paint-can DSNY)
+      verdictState.ts — perceive once, adjudicate per jurisdiction
+    data
+      india 8 rows
+      nyc 8 rows
+      england 10 rows
+      benchmark 27 items
+      gallery 12 cases
+    stack
+      Next.js 15
+      React 19
+      TypeScript
+      Tailwind 4
+      lucide-react
+      Vercel
+    research (open)
+      Lighthouse TBT — CDP measured ~91 ms aurora cost, not 3540 ms; needs real run
+      evaluate raw_vlm + LCL — now feasible via lite pool
+      generator_class enforcement — scope decision
+      fine_bracket — never without primary source
+
+timeline
+    title Further research roadmap (honest priorities)
+    Now : P0 shipped — model chain, cached-sample fallback, build never dies on blip, no fetch patch
+        : Devpost page + video (<=5 min, no stated minimum) — largest non-code gap
+    Next : live re-run of evaluate once quota pools are healthy (raw_vlm + LCL)
+        : P1: same-photo three-rulings shown side-by-side; hero leads with the environmental problem
+        : real Lighthouse run to close the TBT question
+    Later : modernize candidates — PWA offline shell for Mode B, i18n, new jurisdictions
+        : optional: reduce aurora blur on low-end devices (pointer/media-query gating)
+    Never : fill fine_bracket without fetching current primary sources
+        : invent date or citation precision beyond what is sourced
+
+%% Rules of engagement for agents extending this project (from details.md):
+%% 1. Never fabricate a fine figure — re-verify primary source text.
+%% 2. Never invent a date more precise than sourced (date_precision/citation_precision exist for this).
+%% 3. Treat lib/matrix.ts changes as high-risk.
+%% 4. Verification = real file contents / command output, never a narrated summary.
+%% 5. Perception fallback models must be probe-validated with a real image, not trusted by name.

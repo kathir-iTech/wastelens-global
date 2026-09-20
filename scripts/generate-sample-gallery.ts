@@ -23,6 +23,9 @@ const defs: GalleryDef[] = [
   { case_id: "GB-01", item_id: "B13", jurisdiction: "england", note: "grass clippings — garden stream Tier 1" },
   { case_id: "GB-02", item_id: "B11", jurisdiction: "england", note: "half-full takeaway cup — clarify" },
   { case_id: "GB-03", item_id: "B04", jurisdiction: "england", note: "cardboard box — paper-card fibre stream Tier 1" },
+  { case_id: "IN-04", item_id: "B14", jurisdiction: "india", note: "used diaper — sanitary stream Tier 1 (divergent example)" },
+  { case_id: "NY-04", item_id: "B14", jurisdiction: "nyc", note: "used diaper — residual/trash Tier 1 (divergent example)" },
+  { case_id: "GB-04", item_id: "B14", jurisdiction: "england", note: "disposable nappy — residual Tier 1 (divergent example)" },
 ];
 
 async function main(): Promise<number> {

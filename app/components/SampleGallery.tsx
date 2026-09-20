@@ -41,7 +41,7 @@ export function SampleGallery({ onSelect }: { onSelect?: (itemId: string, imageP
   return (
     <section className="mt-12">
       <h2 className="text-xl font-semibold text-ink">
-        Docket — nine pre-adjudicated cases
+        Docket — {cases.length} pre-adjudicated cases
       </h2>
       <p className="mt-1 text-sm text-muted">
         Each ruling was computed by the matrix from the bundled corpus, not hand-typed.
