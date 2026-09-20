@@ -786,9 +786,9 @@
         },
         "nyc": {
           "tier": 1,
-          "stream": "metal-plastic-glass",
+          "stream": "residual",
           "scope": "households",
-          "note": "rigid plastic → recyclables"
+          "note": "styrofoam is not rigid plastic — not accepted with containers/cartons; residual"
         },
         "england": {
           "tier": 1,
@@ -903,9 +903,9 @@
         },
         "nyc": {
           "tier": 1,
-          "stream": "paper-card",
+          "stream": "metal-plastic-glass",
           "scope": "households",
-          "note": "cartons with paper-card recyclables"
+          "note": "cartons are containers per NYC2024-recyclables-hh ('rigid plastic containers plus cartons')"
         },
         "england": {
           "tier": 1,

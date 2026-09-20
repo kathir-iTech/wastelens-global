@@ -67,7 +67,7 @@ function cachedVerdictsFor(itemId: string): Partial<Record<Jurisdiction, Verdict
       ...(v.guidance !== undefined ? { guidance: v.guidance } : {}),
     };
   }
-  return JURISDICTIONS.every((j) => result[j] !== undefined) ? result : null;
+  return Object.keys(result).length > 0 ? result : null;
 }
 
 const SAMPLES: Array<{ id: string; label: string; publicPath: string }> = [
@@ -363,7 +363,8 @@ export default function Home() {
     setBUsedNetwork(used_network);
   }
 
-  const docketJuris: Jurisdiction[] = mode === "A" ? JURISDICTIONS : [activeJuris];
+  const docketJuris: Jurisdiction[] =
+    mode === "B" ? [activeJuris] : cachedVerdicts ? (Object.keys(cachedVerdicts) as Jurisdiction[]) : JURISDICTIONS;
 
   const verdictFor = (j: Jurisdiction) => {
     if (mode === "A") {
@@ -371,6 +372,25 @@ export default function Home() {
     }
     return j === activeJuris ? bVerdict ?? undefined : undefined;
   };
+
+  const modeToggle = (
+    <div className="mt-4 inline-flex flex-wrap gap-1 rounded-2xl border border-white/10 bg-white/[0.04] p-1 shadow-[0_4px_18px_rgba(0,0,0,0.25)] backdrop-blur-xl">
+      {(["A", "B"] as const).map((m) => (
+        <button
+          key={m}
+          type="button"
+          onClick={() => setMode(m)}
+          className={
+            mode === m
+              ? "rounded-xl bg-ink px-4 py-1.5 text-sm font-semibold text-paper"
+              : "rounded-xl px-4 py-1.5 text-sm font-medium text-muted hover:text-ink"
+          }
+        >
+          Mode {m}: {m === "A" ? "Snapshot perception" : "Known attributes (offline)"}
+        </button>
+      ))}
+    </div>
+  );
 
   return (
     <main className="min-h-screen bg-paper text-ink">
@@ -395,45 +415,6 @@ export default function Home() {
           <p className="mt-3 text-xl text-muted md:text-2xl">The law decides.</p>
           <p className="mt-4 text-lg text-muted">Photograph waste, get the statute.</p>
         </header>
-
-        <section className="mb-4 rounded-2xl border border-tier1/40 bg-tier1/[0.06] p-5 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-xl">
-          <h2 className="text-sm font-bold uppercase tracking-wide text-tier1">
-            Why not just ask ChatGPT (or Gemini)?
-          </h2>
-          <p className="mt-3 text-sm leading-relaxed text-muted">
-            Because a chat model gives you its best guess from training-data pattern-matching —
-            which can be a decade stale. WasteLens Global instead looks up{" "}
-            <span className="font-medium text-ink">current, verified law</span>: India SWM Rules
-            2026, NYC Local Law 19 of 1989 (§16-301 et seq.), England SI 2025/140 — each cited to the primary
-            source, not recalled from memory. The same photo gives the{" "}
-            <span className="font-medium text-ink">same answer every time</span> (it is a lookup,
-            not a fresh guess); where there is <span className="font-medium text-ink">no verified
-            match it says so and asks you</span> instead of inventing a confident answer; and it
-            rules the <span className="font-medium text-ink">same object under three real
-            jurisdictions at once</span> — the one thing a single chat answer can never do on its
-            own.
-          </p>
-          <p className="mt-3 text-sm font-semibold text-ink">
-            The law decides, not the model&apos;s guess.
-          </p>
-        </section>
-
-        <div className="mb-4 inline-flex flex-wrap gap-1 rounded-2xl border border-white/10 bg-white/[0.04] p-1 shadow-[0_4px_18px_rgba(0,0,0,0.25)] backdrop-blur-xl">
-          {(["A", "B"] as const).map((m) => (
-            <button
-              key={m}
-              type="button"
-              onClick={() => setMode(m)}
-              className={
-                mode === m
-                  ? "rounded-xl bg-ink px-4 py-1.5 text-sm font-semibold text-paper"
-                  : "rounded-xl px-4 py-1.5 text-sm font-medium text-muted hover:text-ink"
-              }
-            >
-              Mode {m}: {m === "A" ? "Snapshot perception" : "Known attributes (offline)"}
-            </button>
-          ))}
-        </div>
 
         {mode === "A" && (
           <section className="mb-6 rounded-2xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-xl">
@@ -480,6 +461,8 @@ export default function Home() {
                   </button>
                 ))}
               </div>
+
+              {modeToggle}
 
               {liveScanOpen && (
                 <LiveScan
@@ -572,6 +555,26 @@ export default function Home() {
                   jurisdiction switches. Every number shown here is real.
                 </p>
               </details>
+
+              <details className="mt-1 text-sm text-muted">
+                <summary className="cursor-pointer text-accent underline decoration-accent/40 underline-offset-2 hover:decoration-accent">
+                  Why not just ask ChatGPT (or Gemini)?
+                </summary>
+                <p className="mt-2 leading-relaxed">
+                  A chat model gives its best guess from training-data pattern-matching — which
+                  can be a decade stale. WasteLens Global instead looks up{" "}
+                  <span className="font-medium text-ink">current, verified law</span>: India SWM
+                  Rules 2026, NYC Local Law 19 of 1989 (§16-301 et seq.), England SI 2025/140 —
+                  each cited to the primary source, not recalled from memory. The same photo
+                  gives the <span className="font-medium text-ink">same answer every time</span>{" "}
+                  (it is a lookup, not a fresh guess); where there is{" "}
+                  <span className="font-medium text-ink">no verified match it says so and asks
+                  you</span> instead of inventing a confident answer; and it rules the{" "}
+                  <span className="font-medium text-ink">same object under three real
+                  jurisdictions at once</span> — the one thing a single chat answer can never do
+                  on its own. The law decides, not the model&apos;s guess.
+                </p>
+              </details>
             </div>
           </section>
         )}
@@ -579,6 +582,9 @@ export default function Home() {
         {mode === "B" && (
           <section className="mb-6 rounded-2xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-xl">
             <h2 className="text-base font-semibold text-ink">Mode B — local rules → matrix</h2>
+
+            {modeToggle}
+
             <button
               type="button"
               onClick={() => setAdvancedOpen(!advancedOpen)}
@@ -657,7 +663,7 @@ export default function Home() {
               <h2 className="text-base font-semibold text-ink">Docket</h2>
               <JurisdictionToggle value={activeJuris} onChange={onToggle} />
             </div>
-            {mode === "A" && (
+            {mode === "A" && !cachedVerdicts && (
               <p className="mt-2 text-xs text-muted">
                 One perception, three rulings. The matrix re-runs per jurisdiction; perception
                 does not.
@@ -698,7 +704,7 @@ export default function Home() {
 
             {mode === "A" && (
               <div className="mt-3 flex justify-center gap-2">
-                {JURISDICTIONS.map((j) => (
+                {docketJuris.map((j) => (
                   <button
                     key={j}
                     type="button"

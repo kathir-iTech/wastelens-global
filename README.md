@@ -61,12 +61,12 @@ Set `GEMINI_API_KEY` in `.env.local` to enable live fallback perception (Mode A)
 Composition (derived by `scripts/test.ts`, not hand-counted):
 
 - 3 items with **no corpus match anywhere** (Tier 3 exercise): B17 construction debris, B18 e-waste, B19 car battery
-- 5 items with **genuinely divergent verdicts** across India/NYC/England (different tier, or different stream family: recyclable vs residual vs sanitary vs special-care vs garden): B12, B13, B14, B16, B27
+- 5 items with **genuinely divergent verdicts** across India/NYC/England (different tier, or different stream family: recyclable vs residual vs sanitary vs special-care vs garden): B12, B13, B14, B16, B20, B27
 - 5 ambiguity items selected to exercise Tier 2 clarify
 
 ## Real metrics (HARD RULE compliance)
 
-Every line below is copy-pasted from `npm run evaluate` output on **Thu Sep 17 2026** (this repo, this commit). No number is hand-typed; anything the script could not measure is printed as SKIPPED, not estimated. The two p95 timings are batch-mean p95 values at microsecond scale and can jitter by a few µs between runs on a shared machine; `data/generated/eval_metrics.json` (rewritten by every run) is the canonical record — when a p95 line here diverges from the JSON, re-run `npm run evaluate` and re-paste both.
+Every line below is copy-pasted from `npm run evaluate` output on **Sun Sep 20 2026** (this repo, this commit). No number is hand-typed; anything the script could not measure is printed as SKIPPED, not estimated. The two p95 timings are batch-mean p95 values at microsecond scale and can jitter by a few µs between runs on a shared machine; `data/generated/eval_metrics.json` (rewritten by every run) is the canonical record — when a p95 line here diverges from the JSON, re-run `npm run evaluate` and re-paste both.
 
 ```
 === WASTELENS EVALUATE ===
@@ -78,24 +78,24 @@ EVAL accuracy_adjudicated=1.0000 (81/81) definition="matrix+corpus correctness g
 EVAL accuracy_by_jurisdiction india=1.0000 (27/27)
 EVAL accuracy_by_jurisdiction nyc=1.0000 (27/27)
 EVAL accuracy_by_jurisdiction england=1.0000 (27/27)
-EVAL accuracy_raw_vlm=not_computed reason="live Gemini calls all failed (429 quota); key/model verified working — rerun after free-tier budget resets"
+EVAL accuracy_raw_vlm=SKIPPED reason="GEMINI_API_KEY and/or resolved flash model unavailable; raw VLM = ask the vision model the bin directly with no matrix"
 EVAL lcl=not_computed reason="requires accuracy_raw_vlm"
 EVAL tier_coverage tier1=0.6173 tier2=0.1852 tier3=0.1975 (over all item×jurisdiction verdicts)
 EVAL tier_coverage_by_jurisdiction india=tier1:0.6667 tier2:0.1852 tier3:0.1481
 EVAL tier_coverage_by_jurisdiction nyc=tier1:0.5926 tier2:0.1852 tier3:0.2222
 EVAL tier_coverage_by_jurisdiction england=tier1:0.5926 tier2:0.1852 tier3:0.2222
-EVAL jdr=0.2083 (5/24) definition="items whose verdicts genuinely differ across jurisdictions (different tier, or different stream family: recyclable vs residual vs sanitary vs special-care vs garden) / items applicable to >=1 jurisdiction"
+EVAL jdr=0.2500 (6/24) definition="items whose verdicts genuinely differ across jurisdictions (different tier, or different stream family: recyclable vs residual vs sanitary vs special-care vs garden) / items applicable to >=1 jurisdiction"
 EVAL p95_adjudicate_us=7 definition="in-process local adjudicate() call, warmed; batch-mean p95 in microseconds, real timings"
 EVAL p95_pipeline_us=54 definition="in-process retrieve()+adjudicate() pipeline (Mode B local path), warmed; batch-mean p95 in microseconds, real timings"
-EVAL flash_model_resolved=gemini-3.8-flash status=ok source=https://ai.google.dev/gemini-api/docs/models checked_at=2026-09-17T19:18:41.966Z
+EVAL flash_model_resolved=null status=unreachable source=https://ai.google.dev/gemini-api/docs/models checked_at=2026-09-20T12:43:46.960Z
 EVAL metrics_json=data/generated/eval_metrics.json
 === END WASTELENS EVALUATE ===
 ```
 
 Notes for honest reading of the table:
 
-- **LCL** (`LCL = Accuracy_adjudicated − Accuracy_raw_VLM`) is **not computed** in this run: a real `GEMINI_API_KEY` is now set and `gemini-3.8-flash` is confirmed live, but the free tier returned **429 quota** on the eval burst, so `accuracy_raw_vlm` is `not_computed`. Re-run `npm run evaluate` after the free-tier budget resets to print real LCL; nothing is invented to fill the gap. **How `accuracy_raw_vlm` is measured when it does run:** only units whose ground truth is one of the jurisdiction's declared streams (via `streamsFor(jurisdiction)` — e.g. India `wet/dry/sanitary/special-care`, NYC/England `food/paper-card/metal-plastic-glass/residual/garden`) are scored. Each Gemini call is given the jurisdiction and that jurisdiction's real stream vocabulary and must answer with exactly one stream name; **no retrieved rule text and no corpus content is included**, so this isolates the vision model's bin knowledge from our retrieval layer. The answer is scored directly against `gt.stream`. LCL then uses `accuracy_adjudicated` computed over that **same** subset as its base — apples-to-apples — instead of subtracting a global single-vocabulary norm mapping.
-- **JDR = 0.2083** (5/24) is the share of governed items where the three jurisdictions genuinely deliver different verdicts. It fell from the earlier 0.3478 after two benchmark/corpus fixes: cardboard is no longer a false-divergent case (England's missing `paper-card` stream was added — paper and card are one of the six explicitly mandated 2025-SI streams), and the empty paint can was corrected to NYC recyclables while a new half-full wet paint can item preserves the hazardous Tier 3 case.
+- **LCL** (`LCL = Accuracy_adjudicated − Accuracy_raw_VLM`) is **not computed** in this run: the resolved flash-vision model is `unreachable` this session, so `accuracy_raw_vlm` is `SKIPPED`. Re-run `npm run evaluate` when the model endpoint is reachable to print real LCL; nothing is invented to fill the gap. **How `accuracy_raw_vlm` is measured when it does run:** only units whose ground truth is one of the jurisdiction's declared streams (via `streamsFor(jurisdiction)` — e.g. India `wet/dry/sanitary/special-care`, NYC/England `food/paper-card/metal-plastic-glass/residual/garden`) are scored. Each Gemini call is given the jurisdiction and that jurisdiction's real stream vocabulary and must answer with exactly one stream name; **no retrieved rule text and no corpus content is included**, so this isolates the vision model's bin knowledge from our retrieval layer. The answer is scored directly against `gt.stream`. LCL then uses `accuracy_adjudicated` computed over that **same** subset as its base — apples-to-apples — instead of subtracting a global single-vocabulary norm mapping.
+- **JDR = 0.2500** (6/24) is the share of governed items where the three jurisdictions genuinely deliver different verdicts. It changed from the earlier 0.2083 after a benchmark-label correction: B20 (EPS clamshell) is not "rigid plastic" under the NYC rule text, which covers rigid plastic **containers plus cartons** — so the NYC label was corrected to `residual` (foam is not accepted with containers/cartons), making it genuinely divergent across jurisdictions.
 - **`accuracy_adjudicated = 1.0000` is NOT real-world accuracy.** It is matrix/corpus self-consistency **given oracle (hand-labeled) perception attributes** — it proves `matrix.ts` has no bugs relative to its own corpus and says nothing about whether the AI perception is right. Anywhere "100%" or "1.0000" is quoted for this build, the phrase "given hand-labeled inputs" must appear next to it. End-to-end accuracy with live perception only appears in the `accuracy_raw_vlm`/`lcl` lines once the free-tier key quota permits a full pass.
 - **p95 timings are Mode B local-lookup-only**: the in-process deterministic `retrieve()` + `adjudicate()` path, no network. When live Gemini 3.8 Flash perception is wired in, real end-to-end latency is dominated by the API round-trip (realistically 1–3 s), so "sub-millisecond" describes the matrix layer, not the live-scan demo path. A fresh `npm run evaluate` refreshes both the JSON and this table.
 

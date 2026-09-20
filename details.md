@@ -49,13 +49,13 @@ Last refreshed: 2026-09-19 — P0 demo-survival round (model fallback chain, cac
 
 - `fine_bracket = null` on **all 26** rows: no fine figure ever fabricated; re-verify the primary source before adding one.
 - NYC paint-can rule is encoded in `lib/attributeMapper.ts` (empty/dry → metal-plastic-glass per DSNY; wet/partial → special-care).
-- Benchmark: **27 items** (`data/benchmark_set.json`), 5 divergent across jurisdictions (B12, B13, B14, B16, B27), 3 no-match-anywhere (B17, B18, B19), ≥3 ambiguous.
+- Benchmark: **27 items** (`data/benchmark_set.json`), 6 divergent across jurisdictions (B12, B13, B14, B16, B20, B27), 3 no-match-anywhere (B17, B18, B19), ≥3 ambiguous.
 - Sample gallery: **12 cases** (4/jurisdiction; B14 added as IN-04/NY-04/GB-04 — used diaper → India sanitary / NYC residual / England residual, all Tier 1, divergent). The gallery is *the* cached-sample fallback source.
 
 ## 7. Measure/eval numbers (2026-09-19, offline)
 
 - `accuracy_adjudicated = 1.0000` (**81/81**) — an ORACLE self-consistency number (hand-labeled perception attrs), NOT real-world accuracy; do not quote it as such.
-- `jdr = 0.2083` (5/24) — jurisdiction divergence rate.
+- `jdr = 0.25` (6/24) — jurisdiction divergence rate.
 - Tier coverage: Tier1 61.7% / Tier2 18.5% / Tier3 19.8%.
 - p95 adjudicate **14 µs**; p95 Mode B pipeline **51 µs** (real timings, warmed, in-process).
 - `raw_vlm` / `lcl` = `not_computed` while quota dead; now addressable via the lite pool (see §3).
