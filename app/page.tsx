@@ -105,17 +105,21 @@ export default function Home() {
   const [version, setVersion] = useState(0);
   if (ctlRef.current === null) {
     ctlRef.current = createVerdictController(async (ref) => {
-      const res = await fetch("/api/perceive", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image_data: ref }),
-      });
-      if (!res.ok) {
-        const body = (await res.json().catch(() => ({}))) as { error?: string };
-        return { output: null, model_id: null, error: body.error ?? `HTTP ${res.status}` };
+      try {
+        const res = await fetch("/api/perceive", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image_data: ref }),
+        });
+        if (!res.ok) {
+          const body = (await res.json().catch(() => ({}))) as { error?: string };
+          return { output: null, model_id: null, error: body.error ?? `HTTP ${res.status}` };
+        }
+        const json = (await res.json()) as PerceptionOutcomeLike;
+        return { output: json.output, model_id: json.model_id, error: json.error };
+      } catch (err) {
+        return { output: null, model_id: null, error: `perceive route unreachable: ${String(err)}` };
       }
-      const json = (await res.json()) as PerceptionOutcomeLike;
-      return { output: json.output, model_id: json.model_id, error: json.error };
     });
   }
   const ctl = ctlRef.current;
