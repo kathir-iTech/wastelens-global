@@ -83,6 +83,8 @@ const SAMPLES: Array<{ id: string; label: string; publicPath: string }> = [
   { id: "B11", label: "Coffee cup", publicPath: "/benchmark_images/B11.svg" },
 ];
 
+const GALLERY_COUNT = (galleryData as { cases: unknown[] }).cases.length;
+
 function friendlyPerceptionError(raw: string | undefined | null): string {
   if (!raw) return "Perception returned no output.";
   if (raw.includes("GEMINI_API_KEY")) {
@@ -437,7 +439,8 @@ export default function Home() {
                 </button>
                 {uploadDataUrl === null && (
                   <span className="text-xs text-muted">
-                    or pick one of the {SAMPLES.length} bundled samples below.
+                    or try a quick sample — the {SAMPLES.length} images below run the real
+                    perception pipeline, same as a real photo.
                   </span>
                 )}
               </div>
@@ -528,7 +531,7 @@ export default function Home() {
                     onClick={() => setGalleryOpen(true)}
                     className="text-sm text-accent underline decoration-accent/40 underline-offset-2 hover:decoration-accent"
                   >
-                    No camera? See an example instead
+                    See {GALLERY_COUNT} pre-computed examples — fully offline, no network needed
                   </button>
                 ) : (
                   <>
@@ -665,7 +668,7 @@ export default function Home() {
             </div>
             {mode === "A" && !cachedVerdicts && (
               <p className="mt-2 text-xs text-muted">
-                One perception, three rulings. The matrix re-runs per jurisdiction; perception
+                Same item, three rulings — the matrix re-runs per jurisdiction; perception
                 does not.
               </p>
             )}

@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import gallery from "@/data/sample_gallery.json";
 import { TierBadge, Tier } from "./TierBadge";
 import { cn } from "@/lib/cn";
@@ -38,6 +39,16 @@ const CASE_LABEL: Record<string, string> = {
 export function SampleGallery({ onSelect }: { onSelect?: (itemId: string, imagePath: string) => void }) {
   const cases = (gallery as { cases: GalleryCase[] }).cases;
 
+  const groups: Array<{ item_id: string; rows: GalleryCase[] }> = [];
+  for (const c of cases) {
+    const last = groups[groups.length - 1];
+    if (last && last.item_id === c.item_id) {
+      last.rows.push(c);
+    } else {
+      groups.push({ item_id: c.item_id, rows: [c] });
+    }
+  }
+
   return (
     <section className="mt-12">
       <h2 className="text-xl font-semibold text-ink">
@@ -48,7 +59,16 @@ export function SampleGallery({ onSelect }: { onSelect?: (itemId: string, imageP
         Self-contained, zero network calls.
       </p>
       <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {cases.map((c) => {
+        {groups.map((g) => (
+          <Fragment key={g.item_id}>
+            {g.rows.length > 1 && (
+              <div className="col-span-full">
+                <p className="inline-flex items-center gap-2 rounded-full border border-tier2/40 border-l-2 bg-tier2/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-tier2">
+                  Same item, {g.rows.length} rulings — {g.rows[0].label}
+                </p>
+              </div>
+            )}
+            {g.rows.map((c) => {
           const tier = c.verdict.tier as Tier;
           return (
             <article
@@ -100,7 +120,9 @@ export function SampleGallery({ onSelect }: { onSelect?: (itemId: string, imageP
               </div>
             </article>
           );
-        })}
+            })}
+          </Fragment>
+        ))}
       </div>
     </section>
   );
