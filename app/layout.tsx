@@ -7,7 +7,7 @@ export const metadata = {
   metadataBase: new URL(SITE_URL),
   title: "WasteLens Global — Statutory Waste Compliance",
   description:
-    "Photograph waste, get the statute. Perception proposes. The law decides. Deterministic corpus lookups — India SWM 2026, NYC Local Law 19 / §16-324, England SI 2025/140.",
+    "Photograph waste, get the statute. Perception proposes. The law decides. Deterministic corpus lookups — India SWM 2026, NYC Local Law 19 of 1989 (§16-301 et seq.), England SI 2025/140.",
   openGraph: {
     title: "WasteLens Global — Statutory Waste Compliance",
     description: "Perception proposes. The law decides.",

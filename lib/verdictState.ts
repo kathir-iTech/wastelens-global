@@ -115,7 +115,7 @@ export function createVerdictController(
 
 export const JURISDICTION_LABELS: Record<Jurisdiction, string> = {
   india: "India (SWM 2026)",
-  nyc: "New York City (LL 85 / §16-324)",
+  nyc: "New York City (LL 19 of 1989, §16-301 et seq.)",
   england: "England (SI 2025/140)",
 };
 

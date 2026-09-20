@@ -404,7 +404,7 @@ export default function Home() {
             Because a chat model gives you its best guess from training-data pattern-matching —
             which can be a decade stale. WasteLens Global instead looks up{" "}
             <span className="font-medium text-ink">current, verified law</span>: India SWM Rules
-            2026, NYC Local Law 19 / §16-324, England SI 2025/140 — each cited to the primary
+            2026, NYC Local Law 19 of 1989 (§16-301 et seq.), England SI 2025/140 — each cited to the primary
             source, not recalled from memory. The same photo gives the{" "}
             <span className="font-medium text-ink">same answer every time</span> (it is a lookup,
             not a fresh guess); where there is <span className="font-medium text-ink">no verified
@@ -567,7 +567,7 @@ export default function Home() {
                 </summary>
                 <p className="mt-2 leading-relaxed">
                   Verdicts are deterministic matrix lookups against verified corpus rows
-                  (India SWM 2026, NYC Local Law 19 / §16-324, England SI 2025/140) — not
+                  (India SWM 2026, NYC Local Law 19 of 1989 (§16-301 et seq.), England SI 2025/140) — not
                   generated text. Perception runs once per image and is cached across
                   jurisdiction switches. Every number shown here is real.
                 </p>
