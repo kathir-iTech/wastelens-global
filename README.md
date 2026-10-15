@@ -1,5 +1,6 @@
 # WasteLens Global
 
+
 A statutory waste-compliance decision system built for NextStep Hacks 2026 (Earth Forward).
 
 **Perception proposes. The law decides.**
