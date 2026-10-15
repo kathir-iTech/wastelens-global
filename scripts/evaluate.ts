@@ -13,8 +13,8 @@ import { retrieve } from "../lib/retriever";
 import {
   perceiveBinForJurisdiction,
   currentFlashVisionModel,
-  resolveFlashVisionModel,
   geminiQuotaBlocked,
+  resolveFlashVisionModel,
 } from "../lib/perception";
 import {
   allIntegrityIssues,
